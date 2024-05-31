@@ -101,13 +101,15 @@ namespace Tubes3_ResmiTamatStima.Data
 
             // Check if the 'biodata' table exists
             var biodataExists = await connection.ExecuteScalarAsync<int>("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='biodata';");
-            Console.WriteLine($"Biodata table exists: {biodataExists > 0}");
+            System.Diagnostics.Debug.WriteLine($"Biodata table exists: {biodataExists > 0}");
 
             // Check if the 'sidik_jari' table exists
             var sidikJariExists = await connection.ExecuteScalarAsync<int>("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='sidik_jari';");
-            Console.WriteLine($"Sidik Jari table exists: {sidikJariExists > 0}");
+            System.Diagnostics.Debug.WriteLine($"Sidik Jari table exists: {sidikJariExists > 0}");
 
-
+            // Check the number of records in the 'sidik_jari' table
+            var sidikJariCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM sidik_jari;");
+            System.Diagnostics.Debug.WriteLine($"Number of records in Sidik Jari table: {sidikJariCount}");
         }
 
         public static async Task InitializeAndTestDBAsync(IConfiguration configuration)
