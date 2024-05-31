@@ -44,10 +44,14 @@ namespace Tubes3_ResmiTamatStima.Data
                 // Execute the creation of tables
                 await connection.ExecuteAsync(createSQL, transaction: transaction);
 
-                // Get all BMP files from the specified directory
-                string[] files = Directory.GetFiles(@"../data", "*.bmp");
-                int idx = 0;
+                // Get the path to the bin directory
+                string binPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../Dataset"));
+                System.Diagnostics.Debug.WriteLine($"Looking for BMP files in: {binPath}");
 
+                // Get all BMP files from the bin directory
+                string[] files = Directory.GetFiles(binPath, "*.bmp");
+
+                int idx = 0;
                 foreach (string file in files)
                 {
                     idx++;
@@ -128,5 +132,16 @@ namespace Tubes3_ResmiTamatStima.Data
                 return ms.ToArray();
             }
         }
+        public static async Task<List<string>> GetDataFromDB(IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            using var connection = new SqliteConnection(connectionString);
+            await connection.OpenAsync();
+
+            var data = await connection.QueryAsync<string>("SELECT berkas_citra FROM sidik_jari;");
+            return data.ToList();
+        }
+
     }
 }
