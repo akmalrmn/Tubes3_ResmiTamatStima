@@ -124,7 +124,7 @@ namespace Tubes3_ResmiTamatStima.Data
         }
 
         // Converts a Bitmap to a binary representation
-        static byte[] ConvertImageToBinary(Bitmap image)
+        public static byte[] ConvertImageToBinary(Bitmap image)
         {
             using (MemoryStream ms = new MemoryStream())
             {

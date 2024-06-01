@@ -55,7 +55,6 @@
             this.JudulProgram.TabIndex = 0;
             this.JudulProgram.Text = "Sistem Deteksi Individu Berbasis Biometrik Melalui Citra Sidik Jari";
             this.JudulProgram.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.JudulProgram.Click += new System.EventHandler(this.label1_Click);
             // 
             // picBoxInput
             // 
@@ -66,7 +65,6 @@
             this.picBoxInput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBoxInput.TabIndex = 2;
             this.picBoxInput.TabStop = false;
-            this.picBoxInput.Click += new System.EventHandler(this.SidikJariMasukan_Click);
             // 
             // picBoxMatched
             // 
@@ -111,7 +109,6 @@
             this.radioBM.TabStop = true;
             this.radioBM.Text = "BM";
             this.radioBM.UseVisualStyleBackColor = true;
-            this.radioBM.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -123,7 +120,6 @@
             this.groupBox1.Size = new System.Drawing.Size(145, 65);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // radioKMP
             // 
@@ -136,7 +132,6 @@
             this.radioKMP.TabStop = true;
             this.radioKMP.Text = "KMP";
             this.radioKMP.UseVisualStyleBackColor = true;
-            this.radioKMP.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // btnSearch
             // 

@@ -1,112 +1,183 @@
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Tubes3_ResmiTamatStima.Algorithms;
+using Tubes3_ResmiTamatStima.Data;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Tubes3_ResmiTamatStima
 {
+
     public partial class Form1 : Form
     {
         private BoyerMoore boyerMoore;
         private KMP kmp;
-        public Form1()
+        private byte[] fingerprintData;
+        private string inputData;
+        private List<string> data;
+        private IConfiguration configuration;
+
+        public Form1(IConfiguration configuration)
         {
             InitializeComponent();
+            this.configuration = configuration;
             boyerMoore = new BoyerMoore();
             kmp = new KMP();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            // Memuat data dari database ketika form di-load
+            LoadDataFromDB();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private async void LoadDataFromDB()
         {
-
-        }
-
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-
+            data = await DBUtilities.GetDataFromDB(configuration);
         }
 
         private void btnPilihCitra_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            if (this.InvokeRequired)
             {
-                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
-                if (ofd.ShowDialog() == DialogResult.OK)
+                this.Invoke(new Action(() => btnPilihCitra_Click(sender, e)));
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Ambil Gambar");
+                using (OpenFileDialog ofd = new OpenFileDialog())
                 {
-                    Image image = Image.FromFile(ofd.FileName);
-                    picBoxInput.Image = image;
+                    ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        System.Drawing.Image image = System.Drawing.Image.FromFile(ofd.FileName);
+                        picBoxInput.Image = image;
+                        fingerprintData = DBUtilities.ConvertImageToBinary((Bitmap)image);
+                        inputData = Convert.ToBase64String(fingerprintData);
+                        Console.WriteLine(inputData);
+                    }
                 }
             }
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
+            if (picBoxInput.Image == null)
+            {
+                MessageBox.Show("Harap pilih citra sidik jari terlebih dahulu.");
+                return;
+            }
 
+            if (!radioBM.Checked && !radioKMP.Checked) 
+            {
+                MessageBox.Show("Mohon pilih Algoritma terlebih dahulu");
+                return;
+            }
+
+            await SearchFingerprint();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async Task SearchFingerprint()
         {
-            //if (picBoxInput.Image == null)
+            if (fingerprintData == null)
+            {
+                MessageBox.Show("Harap pilih citra sidik jari terlebih dahulu.");
+                return;
+            }
+
+            if (data == null || !data.Any())
+            {
+                MessageBox.Show("Data dari database belum dimuat atau tidak tersedia.");
+                return;
+            }
+
+            double bestSimilarity = 0;
+            string bestMatch = null;
+            int bestMatchIndex = -1;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //for (int i = 0;i < 5;i++) 
             //{
-            //    MessageBox.Show("Harap pilih citra sidik jari terlebih dahulu.");
-            //    return;
+            //    List<int> occurrences;
+            //    if (radioBM.Checked)
+            //    {
+            //        occurrences = boyerMoore.Search(data[i], inputData);
+            //    }
+            //    else
+            //    {
+            //        occurrences = kmp.KMPSearch(data[i], inputData);
+            //    }
+
+            //    double similarity;
+            //    if (occurrences.Count > 0)
+            //    {
+            //        similarity = 1.0;
+            //    }
+            //    else
+            //    {
+            //        int distance = boyerMoore.CalculateLevenshteinDistance(data[i], inputData);
+            //        int maxLength = Math.Max(data[i].Length, inputData.Length);
+            //        similarity = (maxLength - distance) / (double)maxLength;
+            //    }
+
+            //    if (similarity > bestSimilarity)
+            //    {
+            //        bestSimilarity = similarity;
+            //        bestMatch = data[i];
+            //        bestMatchIndex = data.IndexOf(data[i]);
+            //    }
             //}
 
-            SearchFingerprint();
-        }
 
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SidikJariMasukan_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SearchFingerprint()
-        {
-            string text = "FARHAN";
-            string pattern = "FARHANU";
-            Stopwatch stopwatch = new Stopwatch();
-            // Search for pattern in text
-            stopwatch.Start();
-            List<int> occurrences = boyerMoore.Search(text, pattern);
-
-
-            if (occurrences.Count > 0)
+            foreach (string text in data)
             {
-                Console.WriteLine($"Found {occurrences.Count} occurrences of '{pattern}' in text. Similarity: 100%");
-                lblPersentaseKecocokan.Text = "Persentase Kecocokan: 100%";
+                List<int> occurrences;
+                if (radioBM.Checked)
+                {
+                    occurrences = boyerMoore.Search(text, inputData);
+                }
+                else
+                {
+                    occurrences = kmp.KMPSearch(text, inputData);
+                }
+
+                double similarity;
+                if (occurrences.Count > 0)
+                {
+                    similarity = 1.0;
+                }
+                else
+                {
+                    int distance = boyerMoore.CalculateLevenshteinDistance(text, inputData);
+                    int maxLength = Math.Max(text.Length, inputData.Length);
+                    similarity = (maxLength - distance) / (double)maxLength;
+                }
+
+                if (similarity > bestSimilarity)
+                {
+                    bestSimilarity = similarity;
+                    bestMatch = text;
+                    bestMatchIndex = data.IndexOf(text);
+                }
+            }
+
+            stopwatch.Stop();
+            long waktuEks = stopwatch.ElapsedMilliseconds;
+
+            if (bestMatch != null)
+            {
+                lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
+                lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
+                MessageBox.Show($"Match found in entry at index {bestMatchIndex} with similarity {bestSimilarity * 100}%");
             }
             else
             {
-                Console.WriteLine($"No exact match found for '{pattern}' in text. Calculating similarity...");
-
-                // Calculate Levenshtein Distance
-                int distance = boyerMoore.CalculateLevenshteinDistance(text, pattern);
-                Console.WriteLine($"Levenshtein Distance between text and pattern: {distance}");
-
-                // Calculate similarity percentage
-                int maxLength = Math.Max(text.Length, pattern.Length);
-                double similarity = (maxLength - distance) / (double)maxLength;
-                Console.WriteLine($"Similarity: {similarity * 100}%");
-                lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {similarity * 100}%";
+                lblPersentaseKecocokan.Text = "Persentase Kecocokan: 0%";
+                lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
+                MessageBox.Show("No match found.");
             }
-            stopwatch.Stop();
-            long waktuEks = stopwatch.ElapsedMilliseconds;
-            lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
-            Console.ReadLine();
         }
-
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
