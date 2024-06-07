@@ -28,167 +28,176 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.JudulProgram = new System.Windows.Forms.Label();
-            this.picBoxInput = new System.Windows.Forms.PictureBox();
-            this.picBoxMatched = new System.Windows.Forms.PictureBox();
-            this.picBoxResult = new System.Windows.Forms.PictureBox();
-            this.btnPilihCitra = new System.Windows.Forms.Button();
-            this.radioBM = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioKMP = new System.Windows.Forms.RadioButton();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.lblWaktuPencarian = new System.Windows.Forms.Label();
-            this.lblPersentaseKecocokan = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxMatched)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxResult)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            JudulProgram = new Label();
+            picBoxInput = new PictureBox();
+            picBoxMatched = new PictureBox();
+            picBoxResult = new PictureBox();
+            btnPilihCitra = new Button();
+            radioBM = new RadioButton();
+            groupBox1 = new GroupBox();
+            radioKMP = new RadioButton();
+            btnSearch = new Button();
+            lblWaktuPencarian = new Label();
+            lblPersentaseKecocokan = new Label();
+            ((System.ComponentModel.ISupportInitialize)picBoxInput).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picBoxMatched).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picBoxResult).BeginInit();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // JudulProgram
             // 
-            this.JudulProgram.AutoSize = true;
-            this.JudulProgram.Font = new System.Drawing.Font("Roboto", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.JudulProgram.Location = new System.Drawing.Point(84, 65);
-            this.JudulProgram.Name = "JudulProgram";
-            this.JudulProgram.Size = new System.Drawing.Size(895, 34);
-            this.JudulProgram.TabIndex = 0;
-            this.JudulProgram.Text = "Sistem Deteksi Individu Berbasis Biometrik Melalui Citra Sidik Jari";
-            this.JudulProgram.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            JudulProgram.AutoSize = true;
+            JudulProgram.Font = new Font("Roboto", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            JudulProgram.Location = new Point(84, 81);
+            JudulProgram.Name = "JudulProgram";
+            JudulProgram.Size = new Size(895, 34);
+            JudulProgram.TabIndex = 0;
+            JudulProgram.Text = "Sistem Deteksi Individu Berbasis Biometrik Melalui Citra Sidik Jari";
+            JudulProgram.TextAlign = ContentAlignment.TopCenter;
             // 
             // picBoxInput
             // 
-            this.picBoxInput.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.picBoxInput.Location = new System.Drawing.Point(81, 134);
-            this.picBoxInput.Name = "picBoxInput";
-            this.picBoxInput.Size = new System.Drawing.Size(216, 325);
-            this.picBoxInput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picBoxInput.TabIndex = 2;
-            this.picBoxInput.TabStop = false;
+            picBoxInput.BackColor = SystemColors.ActiveBorder;
+            picBoxInput.Location = new Point(81, 168);
+            picBoxInput.Margin = new Padding(3, 4, 3, 4);
+            picBoxInput.Name = "picBoxInput";
+            picBoxInput.Size = new Size(216, 406);
+            picBoxInput.SizeMode = PictureBoxSizeMode.StretchImage;
+            picBoxInput.TabIndex = 2;
+            picBoxInput.TabStop = false;
             // 
             // picBoxMatched
             // 
-            this.picBoxMatched.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.picBoxMatched.Location = new System.Drawing.Point(428, 134);
-            this.picBoxMatched.Name = "picBoxMatched";
-            this.picBoxMatched.Size = new System.Drawing.Size(216, 325);
-            this.picBoxMatched.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picBoxMatched.TabIndex = 3;
-            this.picBoxMatched.TabStop = false;
+            picBoxMatched.BackColor = SystemColors.ActiveBorder;
+            picBoxMatched.Location = new Point(428, 168);
+            picBoxMatched.Margin = new Padding(3, 4, 3, 4);
+            picBoxMatched.Name = "picBoxMatched";
+            picBoxMatched.Size = new Size(216, 406);
+            picBoxMatched.SizeMode = PictureBoxSizeMode.StretchImage;
+            picBoxMatched.TabIndex = 3;
+            picBoxMatched.TabStop = false;
             // 
             // picBoxResult
             // 
-            this.picBoxResult.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.picBoxResult.Location = new System.Drawing.Point(763, 134);
-            this.picBoxResult.Name = "picBoxResult";
-            this.picBoxResult.Size = new System.Drawing.Size(216, 325);
-            this.picBoxResult.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picBoxResult.TabIndex = 4;
-            this.picBoxResult.TabStop = false;
+            picBoxResult.BackColor = SystemColors.ActiveBorder;
+            picBoxResult.Location = new Point(763, 168);
+            picBoxResult.Margin = new Padding(3, 4, 3, 4);
+            picBoxResult.Name = "picBoxResult";
+            picBoxResult.Size = new Size(216, 406);
+            picBoxResult.SizeMode = PictureBoxSizeMode.StretchImage;
+            picBoxResult.TabIndex = 4;
+            picBoxResult.TabStop = false;
             // 
             // btnPilihCitra
             // 
-            this.btnPilihCitra.BackColor = System.Drawing.Color.White;
-            this.btnPilihCitra.Font = new System.Drawing.Font("Roboto", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPilihCitra.Location = new System.Drawing.Point(81, 511);
-            this.btnPilihCitra.Name = "btnPilihCitra";
-            this.btnPilihCitra.Size = new System.Drawing.Size(154, 65);
-            this.btnPilihCitra.TabIndex = 5;
-            this.btnPilihCitra.Text = "Pilih Citra";
-            this.btnPilihCitra.UseVisualStyleBackColor = false;
-            this.btnPilihCitra.Click += new System.EventHandler(this.btnPilihCitra_Click);
+            btnPilihCitra.BackColor = Color.White;
+            btnPilihCitra.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnPilihCitra.Location = new Point(81, 639);
+            btnPilihCitra.Margin = new Padding(3, 4, 3, 4);
+            btnPilihCitra.Name = "btnPilihCitra";
+            btnPilihCitra.Size = new Size(154, 81);
+            btnPilihCitra.TabIndex = 5;
+            btnPilihCitra.Text = "Pilih Citra";
+            btnPilihCitra.UseVisualStyleBackColor = false;
+            btnPilihCitra.Click += btnPilihCitra_Click;
             // 
             // radioBM
             // 
-            this.radioBM.AutoSize = true;
-            this.radioBM.Font = new System.Drawing.Font("Roboto", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioBM.Location = new System.Drawing.Point(6, 9);
-            this.radioBM.Name = "radioBM";
-            this.radioBM.Size = new System.Drawing.Size(58, 24);
-            this.radioBM.TabIndex = 6;
-            this.radioBM.TabStop = true;
-            this.radioBM.Text = "BM";
-            this.radioBM.UseVisualStyleBackColor = true;
+            radioBM.AutoSize = true;
+            radioBM.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioBM.Location = new Point(6, 11);
+            radioBM.Margin = new Padding(3, 4, 3, 4);
+            radioBM.Name = "radioBM";
+            radioBM.Size = new Size(58, 24);
+            radioBM.TabIndex = 6;
+            radioBM.TabStop = true;
+            radioBM.Text = "BM";
+            radioBM.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.groupBox1.Controls.Add(this.radioKMP);
-            this.groupBox1.Controls.Add(this.radioBM);
-            this.groupBox1.Location = new System.Drawing.Point(320, 511);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(145, 65);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
+            groupBox1.BackColor = SystemColors.ButtonHighlight;
+            groupBox1.Controls.Add(radioKMP);
+            groupBox1.Controls.Add(radioBM);
+            groupBox1.Location = new Point(320, 639);
+            groupBox1.Margin = new Padding(3, 4, 3, 4);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(3, 4, 3, 4);
+            groupBox1.Size = new Size(145, 81);
+            groupBox1.TabIndex = 7;
+            groupBox1.TabStop = false;
             // 
             // radioKMP
             // 
-            this.radioKMP.AutoSize = true;
-            this.radioKMP.Font = new System.Drawing.Font("Roboto", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioKMP.Location = new System.Drawing.Point(6, 39);
-            this.radioKMP.Name = "radioKMP";
-            this.radioKMP.Size = new System.Drawing.Size(70, 24);
-            this.radioKMP.TabIndex = 7;
-            this.radioKMP.TabStop = true;
-            this.radioKMP.Text = "KMP";
-            this.radioKMP.UseVisualStyleBackColor = true;
+            radioKMP.AutoSize = true;
+            radioKMP.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioKMP.Location = new Point(6, 49);
+            radioKMP.Margin = new Padding(3, 4, 3, 4);
+            radioKMP.Name = "radioKMP";
+            radioKMP.Size = new Size(70, 24);
+            radioKMP.TabIndex = 7;
+            radioKMP.TabStop = true;
+            radioKMP.Text = "KMP";
+            radioKMP.UseVisualStyleBackColor = true;
             // 
             // btnSearch
             // 
-            this.btnSearch.Font = new System.Drawing.Font("Roboto", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSearch.Location = new System.Drawing.Point(546, 516);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(144, 54);
-            this.btnSearch.TabIndex = 9;
-            this.btnSearch.Text = "Search";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.button2_Click);
+            btnSearch.Font = new Font("Roboto", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearch.Location = new Point(546, 645);
+            btnSearch.Margin = new Padding(3, 4, 3, 4);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(144, 68);
+            btnSearch.TabIndex = 9;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += button2_Click;
             // 
             // lblWaktuPencarian
             // 
-            this.lblWaktuPencarian.AutoSize = true;
-            this.lblWaktuPencarian.Font = new System.Drawing.Font("Roboto", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWaktuPencarian.Location = new System.Drawing.Point(745, 524);
-            this.lblWaktuPencarian.Name = "lblWaktuPencarian";
-            this.lblWaktuPencarian.Size = new System.Drawing.Size(161, 20);
-            this.lblWaktuPencarian.TabIndex = 10;
-            this.lblWaktuPencarian.Text = "Waktu Pencarian: ";
+            lblWaktuPencarian.AutoSize = true;
+            lblWaktuPencarian.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblWaktuPencarian.Location = new Point(745, 655);
+            lblWaktuPencarian.Name = "lblWaktuPencarian";
+            lblWaktuPencarian.Size = new Size(161, 20);
+            lblWaktuPencarian.TabIndex = 10;
+            lblWaktuPencarian.Text = "Waktu Pencarian: ";
             // 
             // lblPersentaseKecocokan
             // 
-            this.lblPersentaseKecocokan.AutoSize = true;
-            this.lblPersentaseKecocokan.Font = new System.Drawing.Font("Roboto", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPersentaseKecocokan.Location = new System.Drawing.Point(745, 550);
-            this.lblPersentaseKecocokan.Name = "lblPersentaseKecocokan";
-            this.lblPersentaseKecocokan.Size = new System.Drawing.Size(209, 20);
-            this.lblPersentaseKecocokan.TabIndex = 12;
-            this.lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
+            lblPersentaseKecocokan.AutoSize = true;
+            lblPersentaseKecocokan.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblPersentaseKecocokan.Location = new Point(745, 688);
+            lblPersentaseKecocokan.Name = "lblPersentaseKecocokan";
+            lblPersentaseKecocokan.Size = new Size(209, 20);
+            lblPersentaseKecocokan.TabIndex = 12;
+            lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
             // 
-            // ResmiTamatStima
+            // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1092, 627);
-            this.Controls.Add(this.lblPersentaseKecocokan);
-            this.Controls.Add(this.lblWaktuPencarian);
-            this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnPilihCitra);
-            this.Controls.Add(this.picBoxResult);
-            this.Controls.Add(this.picBoxMatched);
-            this.Controls.Add(this.picBoxInput);
-            this.Controls.Add(this.JudulProgram);
-            this.Name = "ResmiTamatStima";
-            this.Text = "ResmiTamatStima";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxMatched)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxResult)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1092, 784);
+            Controls.Add(lblPersentaseKecocokan);
+            Controls.Add(lblWaktuPencarian);
+            Controls.Add(btnSearch);
+            Controls.Add(groupBox1);
+            Controls.Add(btnPilihCitra);
+            Controls.Add(picBoxResult);
+            Controls.Add(picBoxMatched);
+            Controls.Add(picBoxInput);
+            Controls.Add(JudulProgram);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "Form1";
+            Text = "ResmiTamatStima";
+            Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)picBoxInput).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picBoxMatched).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picBoxResult).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

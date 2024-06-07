@@ -53,7 +53,6 @@ namespace Tubes3_ResmiTamatStima
                         picBoxInput.Image = image;
                         fingerprintData = DBUtilities.ConvertImageToBinary((Bitmap)image);
                         inputData = Convert.ToBase64String(fingerprintData);
-                        Console.WriteLine(inputData);
                     }
                 }
             }
@@ -170,6 +169,9 @@ namespace Tubes3_ResmiTamatStima
                 lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
                 MessageBox.Show($"Match found in entry at index {bestMatchIndex} with similarity {bestSimilarity * 100}%");
+                byte[] imageBytes = Convert.FromBase64String(bestMatch);
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
             }
             else
             {
