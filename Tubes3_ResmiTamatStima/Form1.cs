@@ -2,11 +2,15 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Tubes3_ResmiTamatStima.Algorithms;
 using Tubes3_ResmiTamatStima.Data;
-using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using System.Windows.Forms;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Tubes3_ResmiTamatStima
 {
-
     public partial class Form1 : Form
     {
         private BoyerMoore boyerMoore;
@@ -49,9 +53,23 @@ namespace Tubes3_ResmiTamatStima
                     ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
-                        System.Drawing.Image image = System.Drawing.Image.FromFile(ofd.FileName);
-                        picBoxInput.Image = image;
-                        fingerprintData = DBUtilities.ConvertImageToBinary((Bitmap)image);
+                        using Bitmap image = new Bitmap(ofd.FileName);
+                        // Ensure the image is large enough for the specified portion
+                        if (image.Width < 30 || image.Height < 30)
+                        {
+                            MessageBox.Show("Image is too small for the specified portion size.");
+                            return;
+                        }
+
+                        // Calculate the coordinates for the middle of the image
+                        int x = (image.Width - 30) / 2;
+                        int y = (image.Height - 30) / 2;
+
+                        // Extract a 30x30 portion from the middle of the image
+                        using Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat);
+                        picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
+                        picBoxInput.Image = (System.Drawing.Image)portion.Clone();
+                        fingerprintData = DBUtilities.ConvertImageToBinary(portion);
                         inputData = Convert.ToBase64String(fingerprintData);
                     }
                 }
@@ -66,7 +84,7 @@ namespace Tubes3_ResmiTamatStima
                 return;
             }
 
-            if (!radioBM.Checked && !radioKMP.Checked) 
+            if (!radioBM.Checked && !radioKMP.Checked)
             {
                 MessageBox.Show("Mohon pilih Algoritma terlebih dahulu");
                 return;
@@ -95,17 +113,18 @@ namespace Tubes3_ResmiTamatStima
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            System.Diagnostics.Debug.WriteLine(data.Count());
-            for (int i = 0; i < data.Count()-15; i++)
+            System.Diagnostics.Debug.WriteLine($"Number of data to search: {data.Count}");
+
+            var tasks = data.Select((d, i) => Task.Run(() =>
             {
                 List<int> occurrences;
                 if (radioBM.Checked)
                 {
-                    occurrences = boyerMoore.Search(data[i], inputData);
+                    occurrences = boyerMoore.Search(d, inputData);
                 }
                 else
                 {
-                    occurrences = kmp.KMPSearch(data[i], inputData);
+                    occurrences = kmp.KMPSearch(d, inputData);
                 }
 
                 double similarity;
@@ -115,51 +134,20 @@ namespace Tubes3_ResmiTamatStima
                 }
                 else
                 {
-                    int distance = boyerMoore.CalculateLevenshteinDistance(data[i], inputData);
-                    int maxLength = Math.Max(data[i].Length, inputData.Length);
+                    int distance = boyerMoore.CalculateLevenshteinDistance(d, inputData);
+                    int maxLength = Math.Max(d.Length, inputData.Length);
                     similarity = (maxLength - distance) / (double)maxLength;
                 }
 
-                if (similarity > bestSimilarity)
-                {
-                    bestSimilarity = similarity;
-                    bestMatch = data[i];
-                    bestMatchIndex = data.IndexOf(data[i]);
-                }
-            }
+                return new { Index = i, Similarity = similarity, Data = d };
+            })).ToArray();
 
+            var results = await Task.WhenAll(tasks);
 
-            /*foreach (string text in data)
-            {
-                List<int> occurrences;
-                if (radioBM.Checked)
-                {
-                    occurrences = boyerMoore.Search(text, inputData);
-                }
-                else
-                {
-                    occurrences = kmp.KMPSearch(text, inputData);
-                }
-
-                double similarity;
-                if (occurrences.Count > 0)
-                {
-                    similarity = 1.0;
-                }
-                else
-                {
-                    int distance = boyerMoore.CalculateLevenshteinDistance(text, inputData);
-                    int maxLength = Math.Max(text.Length, inputData.Length);
-                    similarity = (maxLength - distance) / (double)maxLength;
-                }
-
-                if (similarity > bestSimilarity)
-                {
-                    bestSimilarity = similarity;
-                    bestMatch = text;
-                    bestMatchIndex = data.IndexOf(text);
-                }
-            }*/
+            var bestResult = results.OrderByDescending(r => r.Similarity).First();
+            bestSimilarity = bestResult.Similarity;
+            bestMatch = bestResult.Data;
+            bestMatchIndex = bestResult.Index;
 
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
@@ -171,7 +159,10 @@ namespace Tubes3_ResmiTamatStima
                 MessageBox.Show($"Match found in entry at index {bestMatchIndex} with similarity {bestSimilarity * 100}%");
                 byte[] imageBytes = Convert.FromBase64String(bestMatch);
                 using (MemoryStream ms = new MemoryStream(imageBytes))
-                picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
+                {
+                    picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
+                    picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
+                }
             }
             else
             {
