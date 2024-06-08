@@ -171,7 +171,7 @@
             BiodataText.BackColor = Color.White;
             BiodataText.BorderStyle = BorderStyle.FixedSingle;
             BiodataText.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold);
-            BiodataText.Location = new Point(742, 168);
+            BiodataText.Location = new Point(712, 168);
             BiodataText.Multiline = true;
             BiodataText.Name = "BiodataText";
             BiodataText.Size = new Size(338, 406);
