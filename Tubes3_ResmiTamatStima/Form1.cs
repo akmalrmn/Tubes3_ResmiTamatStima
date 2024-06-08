@@ -2,6 +2,8 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Tubes3_ResmiTamatStima.Algorithms;
 using Tubes3_ResmiTamatStima.Data;
+using System.Drawing.Text;
+using System.Drawing;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
@@ -21,13 +23,30 @@ namespace Tubes3_ResmiTamatStima
         private List<string> names_alay;
         private List<string> names_ori = new List<string>();
         private IConfiguration configuration;
+        private Font customFont;
 
         public Form1(IConfiguration configuration)
         {
             InitializeComponent();
+
+            // Load Custom Font
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile("font.otf");
+            customFont = new Font(pfc.Families[0], 11, FontStyle.Bold);
+
             this.configuration = configuration;
             boyerMoore = new BoyerMoore();
             kmp = new KMP();
+
+            // Set custom font for labels
+            btnPilihCitra.Font = customFont;
+            radioBM.Font = customFont;
+            radioKMP.Font = customFont;
+            groupBox1.Font = customFont;
+            btnSearch.Font = customFont;
+            lblPersentaseKecocokan.Font = customFont;
+            lblWaktuPencarian.Font = customFont;
+            BiodataText.Font = customFont;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -251,6 +270,21 @@ namespace Tubes3_ResmiTamatStima
         }
 
         private void picBoxInput_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioBM_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblWaktuPencarian_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblPersentaseKecocokan_Click(object sender, EventArgs e)
         {
 
         }

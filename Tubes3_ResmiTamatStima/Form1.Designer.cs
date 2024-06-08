@@ -73,7 +73,9 @@
             // btnPilihCitra
             // 
             btnPilihCitra.BackColor = Color.FromArgb(240, 88, 135);
-            btnPilihCitra.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnPilihCitra.FlatAppearance.BorderSize = 0;
+            btnPilihCitra.FlatStyle = FlatStyle.Flat;
+            btnPilihCitra.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnPilihCitra.Location = new Point(81, 639);
             btnPilihCitra.Margin = new Padding(3, 4, 3, 4);
             btnPilihCitra.Name = "btnPilihCitra";
@@ -82,46 +84,44 @@
             btnPilihCitra.Text = "Pilih Citra";
             btnPilihCitra.UseVisualStyleBackColor = false;
             btnPilihCitra.Click += btnPilihCitra_Click;
-            btnPilihCitra.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnPilihCitra.FlatAppearance.BorderSize = 0;
             // 
             // radioBM
             // 
             radioBM.AutoSize = true;
-            radioBM.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioBM.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             radioBM.Location = new Point(6, 11);
             radioBM.Margin = new Padding(0);
-            radioBM.Padding = new Padding(0);
             radioBM.Name = "radioBM";
-            radioBM.Size = new Size(58, 24);
+            radioBM.Size = new Size(61, 26);
             radioBM.TabIndex = 6;
             radioBM.TabStop = true;
             radioBM.Text = "BM";
             radioBM.UseVisualStyleBackColor = true;
+            radioBM.CheckedChanged += radioBM_CheckedChanged;
             // 
             // groupBox1
             // 
             groupBox1.BackColor = Color.FromArgb(240, 88, 135);
             groupBox1.Controls.Add(radioKMP);
             groupBox1.Controls.Add(radioBM);
-            groupBox1.Location = new Point(320, 639);
+            groupBox1.FlatStyle = FlatStyle.Flat;
+            groupBox1.Font = new Font("Press Start 2P", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            groupBox1.Location = new Point(294, 629);
             groupBox1.Margin = new Padding(0);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(0);
             groupBox1.Size = new Size(145, 81);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
-            groupBox1.FlatStyle = FlatStyle.Flat;
             // 
             // radioKMP
             // 
             radioKMP.AutoSize = true;
-            radioKMP.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioKMP.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             radioKMP.Location = new Point(6, 49);
             radioKMP.Margin = new Padding(0);
-            radioKMP.Padding = new Padding(0);
             radioKMP.Name = "radioKMP";
-            radioKMP.Size = new Size(69, 24);
+            radioKMP.Size = new Size(74, 26);
             radioKMP.TabIndex = 7;
             radioKMP.TabStop = true;
             radioKMP.Text = "KMP";
@@ -130,13 +130,13 @@
             // btnSearch
             // 
             btnSearch.BackColor = Color.FromArgb(240, 88, 135);
-            btnSearch.Font = new Font("Microsoft Sans Serif", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSearch.Location = new Point(546, 645);
+            btnSearch.FlatAppearance.BorderSize = 0;
+            btnSearch.FlatStyle = FlatStyle.Flat;
+            btnSearch.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearch.Location = new Point(483, 643);
             btnSearch.Margin = new Padding(3, 4, 3, 4);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(144, 68);
-            btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            btnSearch.FlatAppearance.BorderSize = 0;
             btnSearch.TabIndex = 9;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = true;
@@ -146,33 +146,35 @@
             // 
             lblWaktuPencarian.AutoSize = true;
             lblWaktuPencarian.BackColor = Color.FromArgb(240, 88, 135);
-            lblWaktuPencarian.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblWaktuPencarian.Location = new Point(745, 655);
+            lblWaktuPencarian.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblWaktuPencarian.Location = new Point(705, 655);
             lblWaktuPencarian.Name = "lblWaktuPencarian";
-            lblWaktuPencarian.Size = new Size(163, 20);
+            lblWaktuPencarian.Size = new Size(211, 22);
             lblWaktuPencarian.TabIndex = 10;
             lblWaktuPencarian.Text = "Waktu Pencarian: ";
+            lblWaktuPencarian.Click += lblWaktuPencarian_Click_1;
             // 
             // lblPersentaseKecocokan
             // 
             lblPersentaseKecocokan.AutoSize = true;
             lblPersentaseKecocokan.BackColor = Color.FromArgb(240, 88, 135);
-            lblPersentaseKecocokan.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblPersentaseKecocokan.Location = new Point(745, 688);
+            lblPersentaseKecocokan.Font = new Font("Connection II", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblPersentaseKecocokan.Location = new Point(705, 688);
             lblPersentaseKecocokan.Name = "lblPersentaseKecocokan";
-            lblPersentaseKecocokan.Size = new Size(207, 20);
+            lblPersentaseKecocokan.Size = new Size(265, 22);
             lblPersentaseKecocokan.TabIndex = 12;
             lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
+            lblPersentaseKecocokan.Click += lblPersentaseKecocokan_Click;
             // 
             // BiodataText
             // 
-            BiodataText.BackColor = SystemColors.ActiveBorder;
+            BiodataText.BackColor = Color.White;
             BiodataText.BorderStyle = BorderStyle.FixedSingle;
-            BiodataText.Font = new Font("Roboto", 10.2F, FontStyle.Bold);
-            BiodataText.Location = new Point(763, 168);
+            BiodataText.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold);
+            BiodataText.Location = new Point(742, 168);
             BiodataText.Multiline = true;
             BiodataText.Name = "BiodataText";
-            BiodataText.Size = new Size(216, 406);
+            BiodataText.Size = new Size(338, 406);
             BiodataText.TabIndex = 14;
             // 
             // Form1
