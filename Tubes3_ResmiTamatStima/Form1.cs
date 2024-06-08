@@ -95,41 +95,41 @@ namespace Tubes3_ResmiTamatStima
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            System.Diagnostics.Debug.WriteLine(data.Count());
+            for (int i = 0; i < data.Count()-15; i++)
+            {
+                List<int> occurrences;
+                if (radioBM.Checked)
+                {
+                    occurrences = boyerMoore.Search(data[i], inputData);
+                }
+                else
+                {
+                    occurrences = kmp.KMPSearch(data[i], inputData);
+                }
 
-            //for (int i = 0;i < 5;i++) 
-            //{
-            //    List<int> occurrences;
-            //    if (radioBM.Checked)
-            //    {
-            //        occurrences = boyerMoore.Search(data[i], inputData);
-            //    }
-            //    else
-            //    {
-            //        occurrences = kmp.KMPSearch(data[i], inputData);
-            //    }
+                double similarity;
+                if (occurrences.Count > 0)
+                {
+                    similarity = 1.0;
+                }
+                else
+                {
+                    int distance = boyerMoore.CalculateLevenshteinDistance(data[i], inputData);
+                    int maxLength = Math.Max(data[i].Length, inputData.Length);
+                    similarity = (maxLength - distance) / (double)maxLength;
+                }
 
-            //    double similarity;
-            //    if (occurrences.Count > 0)
-            //    {
-            //        similarity = 1.0;
-            //    }
-            //    else
-            //    {
-            //        int distance = boyerMoore.CalculateLevenshteinDistance(data[i], inputData);
-            //        int maxLength = Math.Max(data[i].Length, inputData.Length);
-            //        similarity = (maxLength - distance) / (double)maxLength;
-            //    }
-
-            //    if (similarity > bestSimilarity)
-            //    {
-            //        bestSimilarity = similarity;
-            //        bestMatch = data[i];
-            //        bestMatchIndex = data.IndexOf(data[i]);
-            //    }
-            //}
+                if (similarity > bestSimilarity)
+                {
+                    bestSimilarity = similarity;
+                    bestMatch = data[i];
+                    bestMatchIndex = data.IndexOf(data[i]);
+                }
+            }
 
 
-            foreach (string text in data)
+            /*foreach (string text in data)
             {
                 List<int> occurrences;
                 if (radioBM.Checked)
@@ -159,7 +159,7 @@ namespace Tubes3_ResmiTamatStima
                     bestMatch = text;
                     bestMatchIndex = data.IndexOf(text);
                 }
-            }
+            }*/
 
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
