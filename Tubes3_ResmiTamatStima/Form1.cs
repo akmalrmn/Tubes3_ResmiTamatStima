@@ -18,6 +18,8 @@ namespace Tubes3_ResmiTamatStima
         private byte[] fingerprintData;
         private string inputData;
         private List<string> data;
+        private List<string> names_alay;
+        private List<string> names_ori = new List<string>();
         private IConfiguration configuration;
 
         public Form1(IConfiguration configuration)
@@ -32,11 +34,20 @@ namespace Tubes3_ResmiTamatStima
         {
             // Memuat data dari database ketika form di-load
             LoadDataFromDB();
+
         }
 
         private async void LoadDataFromDB()
         {
+            await DBUtilities.InsertDummyDataAsync(configuration);
             data = await DBUtilities.GetDataFromDB(configuration);
+            names_alay = await DBUtilities.GetNamesFromBiodata(configuration);
+            foreach (string name in names_alay)
+            {
+                names_ori.Add(AlayConverter.ConvertAlayToOriginal(name));
+            }
+
+            await DBUtilities.UpdateNameInSidikJariAsync(configuration, "Jokowi2", "dewi");
         }
 
         private void btnPilihCitra_Click(object sender, EventArgs e)
@@ -152,29 +163,88 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
 
-            if (bestMatch != null)
+            if (bestMatch != null && bestSimilarity * 100 > 70)
             {
                 lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
-                MessageBox.Show($"Match found in entry at index {bestMatchIndex} with similarity {bestSimilarity * 100}%");
                 byte[] imageBytes = Convert.FromBase64String(bestMatch);
                 using (MemoryStream ms = new MemoryStream(imageBytes))
                 {
                     picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
                     picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
                 }
+                string name = await DBUtilities.GetNamesByCitraFromDB(configuration, bestMatch);
+
+
+                double bestSimilarity_name = 0;
+                string bestMatch_name = null;
+
+                foreach (string nama in names_ori)
+                {
+                    List<int> occurrences_name;
+                    occurrences_name = boyerMoore.Search(nama, name);
+                    double similarity_name;
+                    if (occurrences_name.Count > 0)
+                    {
+                        similarity_name = 1.0;
+                    }
+                    else
+                    {
+                        int distance = boyerMoore.CalculateLevenshteinDistance(nama, name);
+                        int maxLength = Math.Max(nama.Length, name.Length);
+                        similarity_name = (maxLength - distance) / (double)maxLength;
+                    }
+
+                    if (similarity_name > bestSimilarity_name)
+                    {
+                        bestSimilarity_name = similarity_name;
+                        bestMatch_name = nama;
+                    }
+                }
+
+                int idx = names_ori.IndexOf(bestMatch_name);
+                string alay = names_alay[idx];
+                Biodata biodata = await DBUtilities.GetBiodataByNameFromDB(configuration, alay);
+
+                // Create and display labels for biodata
+                var biodataText = $@"
+                NIK: {biodata.NIK}
+                Nama: {name}
+                Tempat Lahir: {biodata.tempat_lahir}
+                Tanggal Lahir: {biodata.tanggal_lahir}
+                Jenis Kelamin: {biodata.jenis_kelamin}
+                Golongan Darah: {biodata.golongan_darah}
+                Alamat: {biodata.alamat}
+                Agama: {biodata.agama}
+                Status Perkawinan: {biodata.status_perkawinan}
+                Pekerjaan: {biodata.pekerjaan}
+                Kewarganegaraan: {biodata.kewarganegaraan}";
+
+                BiodataText.Text = biodataText;
             }
             else
             {
-                lblPersentaseKecocokan.Text = "Persentase Kecocokan: 0%";
+                lblPersentaseKecocokan.Text = "Persentase Kecocokan: -";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
-                MessageBox.Show("No match found.");
+                MessageBox.Show("Tidak Ditemukan Sidik Jari yang Tingkat Kemiripannya diatas 70%");
             }
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        
     }
+}
+
+public class Biodata 
+{
+    public string NIK { get; set; }
+    public string nama { get; set; }
+    public string tempat_lahir { get; set; }
+    public string tanggal_lahir { get; set; }
+    public string jenis_kelamin { get; set; }
+    public string golongan_darah { get; set; }
+    public string alamat { get; set; }
+    public string agama { get; set; }
+    public string status_perkawinan { get; set; }
+    public string pekerjaan { get; set; }
+    public string kewarganegaraan { get; set; }
 }

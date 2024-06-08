@@ -31,7 +31,6 @@
             JudulProgram = new Label();
             picBoxInput = new PictureBox();
             picBoxMatched = new PictureBox();
-            picBoxResult = new PictureBox();
             btnPilihCitra = new Button();
             radioBM = new RadioButton();
             groupBox1 = new GroupBox();
@@ -39,9 +38,9 @@
             btnSearch = new Button();
             lblWaktuPencarian = new Label();
             lblPersentaseKecocokan = new Label();
+            BiodataText = new TextBox();
             ((System.ComponentModel.ISupportInitialize)picBoxInput).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picBoxMatched).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picBoxResult).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -77,17 +76,6 @@
             picBoxMatched.SizeMode = PictureBoxSizeMode.StretchImage;
             picBoxMatched.TabIndex = 3;
             picBoxMatched.TabStop = false;
-            // 
-            // picBoxResult
-            // 
-            picBoxResult.BackColor = SystemColors.ActiveBorder;
-            picBoxResult.Location = new Point(763, 168);
-            picBoxResult.Margin = new Padding(3, 4, 3, 4);
-            picBoxResult.Name = "picBoxResult";
-            picBoxResult.Size = new Size(216, 406);
-            picBoxResult.SizeMode = PictureBoxSizeMode.StretchImage;
-            picBoxResult.TabIndex = 4;
-            picBoxResult.TabStop = false;
             // 
             // btnPilihCitra
             // 
@@ -173,17 +161,28 @@
             lblPersentaseKecocokan.TabIndex = 12;
             lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
             // 
+            // BiodataText
+            // 
+            BiodataText.BackColor = SystemColors.ActiveBorder;
+            BiodataText.BorderStyle = BorderStyle.FixedSingle;
+            BiodataText.Font = new Font("Roboto", 10.2F, FontStyle.Bold);
+            BiodataText.Location = new Point(763, 168);
+            BiodataText.Multiline = true;
+            BiodataText.Name = "BiodataText";
+            BiodataText.Size = new Size(216, 406);
+            BiodataText.TabIndex = 14;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1092, 784);
+            Controls.Add(BiodataText);
             Controls.Add(lblPersentaseKecocokan);
             Controls.Add(lblWaktuPencarian);
             Controls.Add(btnSearch);
             Controls.Add(groupBox1);
             Controls.Add(btnPilihCitra);
-            Controls.Add(picBoxResult);
             Controls.Add(picBoxMatched);
             Controls.Add(picBoxInput);
             Controls.Add(JudulProgram);
@@ -193,7 +192,6 @@
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)picBoxInput).EndInit();
             ((System.ComponentModel.ISupportInitialize)picBoxMatched).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picBoxResult).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -205,7 +203,6 @@
         private System.Windows.Forms.Label JudulProgram;
         private System.Windows.Forms.PictureBox picBoxInput;
         private System.Windows.Forms.PictureBox picBoxMatched;
-        private System.Windows.Forms.PictureBox picBoxResult;
         private System.Windows.Forms.Button btnPilihCitra;
         private System.Windows.Forms.RadioButton radioBM;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -213,5 +210,6 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Label lblWaktuPencarian;
         private System.Windows.Forms.Label lblPersentaseKecocokan;
+        private TextBox BiodataText;
     }
 }
