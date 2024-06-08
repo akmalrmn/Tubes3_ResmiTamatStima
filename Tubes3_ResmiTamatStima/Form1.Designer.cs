@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            JudulProgram = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             picBoxInput = new PictureBox();
             picBoxMatched = new PictureBox();
             btnPilihCitra = new Button();
@@ -44,20 +44,11 @@
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
-            // JudulProgram
-            // 
-            JudulProgram.AutoSize = true;
-            JudulProgram.Font = new Font("Roboto", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            JudulProgram.Location = new Point(84, 81);
-            JudulProgram.Name = "JudulProgram";
-            JudulProgram.Size = new Size(895, 34);
-            JudulProgram.TabIndex = 0;
-            JudulProgram.Text = "Sistem Deteksi Individu Berbasis Biometrik Melalui Citra Sidik Jari";
-            JudulProgram.TextAlign = ContentAlignment.TopCenter;
-            // 
             // picBoxInput
             // 
             picBoxInput.BackColor = SystemColors.ActiveBorder;
+            picBoxInput.BackgroundImage = (Image)resources.GetObject("picBoxInput.BackgroundImage");
+            picBoxInput.BackgroundImageLayout = ImageLayout.Stretch;
             picBoxInput.Location = new Point(81, 168);
             picBoxInput.Margin = new Padding(3, 4, 3, 4);
             picBoxInput.Name = "picBoxInput";
@@ -69,6 +60,8 @@
             // picBoxMatched
             // 
             picBoxMatched.BackColor = SystemColors.ActiveBorder;
+            picBoxMatched.BackgroundImage = src.Properties.Resources._16061;
+            picBoxMatched.BackgroundImageLayout = ImageLayout.Stretch;
             picBoxMatched.Location = new Point(428, 168);
             picBoxMatched.Margin = new Padding(3, 4, 3, 4);
             picBoxMatched.Name = "picBoxMatched";
@@ -79,8 +72,8 @@
             // 
             // btnPilihCitra
             // 
-            btnPilihCitra.BackColor = Color.White;
-            btnPilihCitra.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnPilihCitra.BackColor = Color.FromArgb(240, 88, 135);
+            btnPilihCitra.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnPilihCitra.Location = new Point(81, 639);
             btnPilihCitra.Margin = new Padding(3, 4, 3, 4);
             btnPilihCitra.Name = "btnPilihCitra";
@@ -89,13 +82,16 @@
             btnPilihCitra.Text = "Pilih Citra";
             btnPilihCitra.UseVisualStyleBackColor = false;
             btnPilihCitra.Click += btnPilihCitra_Click;
+            btnPilihCitra.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnPilihCitra.FlatAppearance.BorderSize = 0;
             // 
             // radioBM
             // 
             radioBM.AutoSize = true;
-            radioBM.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioBM.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             radioBM.Location = new Point(6, 11);
-            radioBM.Margin = new Padding(3, 4, 3, 4);
+            radioBM.Margin = new Padding(0);
+            radioBM.Padding = new Padding(0);
             radioBM.Name = "radioBM";
             radioBM.Size = new Size(58, 24);
             radioBM.TabIndex = 6;
@@ -105,25 +101,27 @@
             // 
             // groupBox1
             // 
-            groupBox1.BackColor = SystemColors.ButtonHighlight;
+            groupBox1.BackColor = Color.FromArgb(240, 88, 135);
             groupBox1.Controls.Add(radioKMP);
             groupBox1.Controls.Add(radioBM);
             groupBox1.Location = new Point(320, 639);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
+            groupBox1.Margin = new Padding(0);
             groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
+            groupBox1.Padding = new Padding(0);
             groupBox1.Size = new Size(145, 81);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
+            groupBox1.FlatStyle = FlatStyle.Flat;
             // 
             // radioKMP
             // 
             radioKMP.AutoSize = true;
-            radioKMP.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            radioKMP.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             radioKMP.Location = new Point(6, 49);
-            radioKMP.Margin = new Padding(3, 4, 3, 4);
+            radioKMP.Margin = new Padding(0);
+            radioKMP.Padding = new Padding(0);
             radioKMP.Name = "radioKMP";
-            radioKMP.Size = new Size(70, 24);
+            radioKMP.Size = new Size(69, 24);
             radioKMP.TabIndex = 7;
             radioKMP.TabStop = true;
             radioKMP.Text = "KMP";
@@ -131,11 +129,14 @@
             // 
             // btnSearch
             // 
-            btnSearch.Font = new Font("Roboto", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSearch.BackColor = Color.FromArgb(240, 88, 135);
+            btnSearch.Font = new Font("Microsoft Sans Serif", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSearch.Location = new Point(546, 645);
             btnSearch.Margin = new Padding(3, 4, 3, 4);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(144, 68);
+            btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnSearch.FlatAppearance.BorderSize = 0;
             btnSearch.TabIndex = 9;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = true;
@@ -144,20 +145,22 @@
             // lblWaktuPencarian
             // 
             lblWaktuPencarian.AutoSize = true;
-            lblWaktuPencarian.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblWaktuPencarian.BackColor = Color.FromArgb(240, 88, 135);
+            lblWaktuPencarian.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblWaktuPencarian.Location = new Point(745, 655);
             lblWaktuPencarian.Name = "lblWaktuPencarian";
-            lblWaktuPencarian.Size = new Size(161, 20);
+            lblWaktuPencarian.Size = new Size(163, 20);
             lblWaktuPencarian.TabIndex = 10;
             lblWaktuPencarian.Text = "Waktu Pencarian: ";
             // 
             // lblPersentaseKecocokan
             // 
             lblPersentaseKecocokan.AutoSize = true;
-            lblPersentaseKecocokan.Font = new Font("Roboto", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblPersentaseKecocokan.BackColor = Color.FromArgb(240, 88, 135);
+            lblPersentaseKecocokan.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblPersentaseKecocokan.Location = new Point(745, 688);
             lblPersentaseKecocokan.Name = "lblPersentaseKecocokan";
-            lblPersentaseKecocokan.Size = new Size(209, 20);
+            lblPersentaseKecocokan.Size = new Size(207, 20);
             lblPersentaseKecocokan.TabIndex = 12;
             lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
             // 
@@ -176,6 +179,9 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.Control;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1092, 784);
             Controls.Add(BiodataText);
             Controls.Add(lblPersentaseKecocokan);
@@ -185,7 +191,6 @@
             Controls.Add(btnPilihCitra);
             Controls.Add(picBoxMatched);
             Controls.Add(picBoxInput);
-            Controls.Add(JudulProgram);
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "ResmiTamatStima";
@@ -199,8 +204,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label JudulProgram;
         private System.Windows.Forms.PictureBox picBoxInput;
         private System.Windows.Forms.PictureBox picBoxMatched;
         private System.Windows.Forms.Button btnPilihCitra;

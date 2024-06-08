@@ -230,7 +230,30 @@ namespace Tubes3_ResmiTamatStima
             }
         }
 
-        
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void JudulProgram_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblWaktuPencarian_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void picBoxInput_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
