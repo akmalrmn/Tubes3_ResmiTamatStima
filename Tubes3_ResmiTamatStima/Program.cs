@@ -21,9 +21,11 @@ namespace Tubes3_ResmiTamatStima
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
+
+            Task.Run(async () => await DBUtilities.InitializeDBAsync(configuration)).Wait();
             InitializeAndRun(configuration);
         }
-
+        
         private static void InitializeAndRun(IConfiguration configuration)
         {
             Application.Run(new Form1(configuration));

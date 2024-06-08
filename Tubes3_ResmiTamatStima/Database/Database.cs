@@ -14,6 +14,13 @@ namespace Tubes3_ResmiTamatStima.Data
         public static async Task<bool> InitializeDBAsync(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
+            using var connection = new SqliteConnection(connectionString);
+            await connection.OpenAsync();
+
+            // check if table already exist using connection
+            await connection.ExecuteAsync("DROP TABLE IF EXISTS biodata;");
+            await connection.ExecuteAsync("DROP TABLE IF EXISTS sidik_jari;");
+
             var createSQL = @"
             CREATE TABLE IF NOT EXISTS `biodata` (
                 `NIK` TEXT PRIMARY KEY,
@@ -33,10 +40,7 @@ namespace Tubes3_ResmiTamatStima.Data
                 `berkas_citra` TEXT,
                 `nama` TEXT
             );";
-
-            using var connection = new SqliteConnection(connectionString);
-            await connection.OpenAsync();
-
+                        
             using var transaction = await connection.BeginTransactionAsync();
 
             try
@@ -63,8 +67,12 @@ namespace Tubes3_ResmiTamatStima.Data
                         throw new ArgumentException("Image is too small for the specified portion size.");
                     }
 
-                    // Extract a 30x30 portion of the image
-                    using Bitmap portion = image.Clone(new Rectangle(0, 0, 30, 30), image.PixelFormat);
+                    // Calculate the coordinates for the middle of the image
+                    int x = (image.Width - 30) / 2;
+                    int y = (image.Height - 30) / 2;
+
+                    // Extract a 30x30 portion from the middle of the image
+                    using Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat);
 
                     // Convert the portion to binary data
                     byte[] binaryData = ConvertImageToBinary(portion);
