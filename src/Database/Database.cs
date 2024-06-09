@@ -7,14 +7,12 @@ namespace Tubes3_ResmiTamatStima.Data
 {
     public static class DBUtilities
     {
-
+        // Initializes the database with BMP file paths from a test directory
         public static async Task<bool> InitializeDBAsync(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             using var connection = new SqliteConnection(connectionString);
             await connection.OpenAsync();
-
-            // ... rest of your code ...
 
             // Get the path to the test directory
             string testPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../test"));
@@ -34,7 +32,7 @@ namespace Tubes3_ResmiTamatStima.Data
                 // Insert the relative path into the database
                 await connection.ExecuteAsync("INSERT INTO sidik_jari (berkas_citra, nama) VALUES (@imageData, @name)",
                     new { imageData = "test/" + relativePath, name = "Jokowi" });
-                System.Diagnostics.Debug.WriteLine("test/" + relativePath); 
+                System.Diagnostics.Debug.WriteLine("test/" + relativePath);
             }
 
             return true;
@@ -49,6 +47,8 @@ namespace Tubes3_ResmiTamatStima.Data
                 return ms.ToArray();
             }
         }
+
+        // Retrieves all image data (berkas_citra) from the sidik_jari table
         public static async Task<List<string>> GetDataFromDB(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -60,6 +60,7 @@ namespace Tubes3_ResmiTamatStima.Data
             return data.ToList();
         }
 
+        // Retrieves names associated with a given image data (citra) from the sidik_jari table
         public static async Task<string> GetNamesByCitraFromDB(IConfiguration configuration, string citra)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -72,6 +73,7 @@ namespace Tubes3_ResmiTamatStima.Data
             return string.Join(", ", data);
         }
 
+        // Retrieves all names from the biodata table
         public static async Task<List<string>> GetNamesFromBiodata(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -83,6 +85,7 @@ namespace Tubes3_ResmiTamatStima.Data
             return data.ToList();
         }
 
+        // Retrieves biodata of a person by their name from the biodata table
         public static async Task<Biodata> GetBiodataByNameFromDB(IConfiguration configuration, string name)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -91,10 +94,11 @@ namespace Tubes3_ResmiTamatStima.Data
             await connection.OpenAsync();
 
             var data = await connection.QueryFirstOrDefaultAsync<Biodata>("SELECT * FROM biodata WHERE nama = @name;", new { name });
-            
+
             return data;
         }
 
+        // Updates the name in the sidik_jari table
         public static async Task UpdateNameInSidikJariAsync(IConfiguration configuration, string oldName, string newName)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");

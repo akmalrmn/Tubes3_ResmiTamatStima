@@ -27,7 +27,7 @@ namespace Tubes3_ResmiTamatStima
 
             this.configuration = configuration;
             boyerMoore = new BoyerMoore();
-            kmp = new KMP();    
+            kmp = new KMP();
 
             // Set custom font for labels if it was loaded successfully
             if (customFont != null)
@@ -43,6 +43,7 @@ namespace Tubes3_ResmiTamatStima
             }
         }
 
+        // Load custom font from file
         private void LoadCustomFont()
         {
             try
@@ -54,18 +55,20 @@ namespace Tubes3_ResmiTamatStima
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading custom font: {ex.Message}");
-                customFont = this.Font; // Fall back to default font
+                customFont = this.Font; // Fall back to default font if loading fails
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Memuat data dari database ketika form di-load
+            // Load data from database when form loads
             LoadDataFromDB();
         }
 
+        // Load data from database asynchronously
         private async void LoadDataFromDB()
         {
+            // Get image file paths from database
             files = await DBUtilities.GetDataFromDB(configuration);
             foreach (string file in files)
             {
@@ -90,18 +93,23 @@ namespace Tubes3_ResmiTamatStima
                 // Convert binary data to Base64 string representation
                 string base64Data = Convert.ToBase64String(binaryData);
 
+                // Add base64 string to data list
                 data.Add(base64Data);
             }
 
+            // Get alay names from database
             names_alay = await DBUtilities.GetNamesFromBiodata(configuration);
             foreach (string name in names_alay)
             {
+                // Convert alay names to original names
                 names_ori.Add(AlayConverter.ConvertAlayToOriginal(name));
             }
 
+            // Update specific entry in sidik_jari table
             await DBUtilities.UpdateNameInSidikJariAsync(configuration, "Jokowi2", "dewi");
         }
 
+        // Handle the click event for the "Pilih Citra" button
         private void btnPilihCitra_Click(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
@@ -130,8 +138,10 @@ namespace Tubes3_ResmiTamatStima
                                 // Extract a portion from the middle of the image
                                 using (Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat))
                                 {
-                                    picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
+                                    // Display the portion in the PictureBox
+                                    picBoxInput.SizeMode = PictureBoxSizeMode.Zoom;
                                     picBoxInput.Image = (System.Drawing.Image)portion.Clone();
+                                    // Convert the portion to binary data and base64 string
                                     fingerprintData = DBUtilities.ConvertImageToBinary(portion);
                                     inputData = Convert.ToBase64String(fingerprintData);
                                 }
@@ -146,6 +156,7 @@ namespace Tubes3_ResmiTamatStima
             }
         }
 
+        // Handle the click event for the "Search" button
         private async void button2_Click(object sender, EventArgs e)
         {
             if (picBoxInput.Image == null)
@@ -160,9 +171,11 @@ namespace Tubes3_ResmiTamatStima
                 return;
             }
 
+            // Perform fingerprint search asynchronously
             await SearchFingerprint();
         }
 
+        // Perform fingerprint search and display the results
         private async Task SearchFingerprint()
         {
             if (fingerprintData == null)
@@ -185,6 +198,7 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Start();
             System.Diagnostics.Debug.WriteLine($"Number of data to search: {data.Count}");
 
+            // Parallel search in data list using the selected algorithm
             var tasks = data.Select((d, i) => Task.Run(() =>
             {
                 List<int> occurrences;
@@ -214,6 +228,7 @@ namespace Tubes3_ResmiTamatStima
 
             var results = await Task.WhenAll(tasks);
 
+            // Find the best match
             var bestResult = results.OrderByDescending(r => r.Similarity).First();
             bestSimilarity = bestResult.Similarity;
             bestMatch = bestResult.Data;
@@ -222,6 +237,7 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
 
+            // Display the best match result if similarity is above 60%
             if (bestMatch != null && bestSimilarity * 100 > 60)
             {
                 System.Diagnostics.Debug.WriteLine($"Index: {bestMatchIndex}, Similarity: {bestSimilarity}");
@@ -240,17 +256,17 @@ namespace Tubes3_ResmiTamatStima
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
 
+                // Search for the best name match
                 foreach (string nama in names_ori)
                 {
                     List<int> occurrences_name;
                     if (nama.Length > name.Length)
                     {
-                    occurrences_name = boyerMoore.Search(name, nama);
+                        occurrences_name = boyerMoore.Search(name, nama);
                     }
                     else
                     {
                         occurrences_name = boyerMoore.Search(nama, name);
-
                     }
                     double similarity_name;
                     if (occurrences_name.Count > 0)
@@ -258,9 +274,7 @@ namespace Tubes3_ResmiTamatStima
                         bestSimilarity_name = 1.0;
                         bestMatch_name = nama;
                         System.Diagnostics.Debug.WriteLine($"Nama: {nama}, Similarity: 1");
-
                         break;
-
                     }
                     else
                     {
@@ -280,33 +294,33 @@ namespace Tubes3_ResmiTamatStima
                 int idx = names_ori.IndexOf(bestMatch_name);
                 System.Diagnostics.Debug.WriteLine($"Index Nama: {idx}, Similarity: {bestSimilarity_name}");
 
+                // Display the biodata if name similarity is above 60%
                 if (idx != -1 && bestSimilarity_name * 100 > 60)
                 {
-                string alay = names_alay[idx];
-                Biodata biodata = await DBUtilities.GetBiodataByNameFromDB(configuration, alay);
+                    string alay = names_alay[idx];
+                    Biodata biodata = await DBUtilities.GetBiodataByNameFromDB(configuration, alay);
 
-                // Create and display labels for biodata
-                var biodataText = $"NIK: {biodata.NIK}\r\n\r\n" +
-                  $"Nama: {name}\r\n\r\n" +
-                  $"Tempat Lahir: {biodata.tempat_lahir}\r\n\r\n" +
-                  $"Tanggal Lahir: {biodata.tanggal_lahir}\r\n\r\n" +
-                  $"Jenis Kelamin: {biodata.jenis_kelamin}\r\n\r\n" +
-                  $"Golongan Darah: {biodata.golongan_darah}\r\n\r\n" +
-                  $"Alamat: {biodata.alamat}\r\n\r\n" +
-                  $"Agama: {biodata.agama}\r\n\r\n" +
-                  $"Status Perkawinan: {biodata.status_perkawinan}\r\n\r\n" +
-                  $"Pekerjaan: {biodata.pekerjaan}\r\n\r\n" +
-                  $"Kewarganegaraan: {biodata.kewarganegaraan}\r\n\r\n";
+                    // Create and display labels for biodata
+                    var biodataText = $"NIK: {biodata.NIK}\r\n\r\n" +
+                      $"Nama: {name}\r\n\r\n" +
+                      $"Tempat Lahir: {biodata.tempat_lahir}\r\n\r\n" +
+                      $"Tanggal Lahir: {biodata.tanggal_lahir}\r\n\r\n" +
+                      $"Jenis Kelamin: {biodata.jenis_kelamin}\r\n\r\n" +
+                      $"Golongan Darah: {biodata.golongan_darah}\r\n\r\n" +
+                      $"Alamat: {biodata.alamat}\r\n\r\n" +
+                      $"Agama: {biodata.agama}\r\n\r\n" +
+                      $"Status Perkawinan: {biodata.status_perkawinan}\r\n\r\n" +
+                      $"Pekerjaan: {biodata.pekerjaan}\r\n\r\n" +
+                      $"Kewarganegaraan: {biodata.kewarganegaraan}\r\n\r\n";
 
-                BiodataText.TextAlign = HorizontalAlignment.Left;
-                BiodataText.ReadOnly = true;
-                BiodataText.Multiline = true;
-                BiodataText.Text = biodataText;
+                    BiodataText.TextAlign = HorizontalAlignment.Left;
+                    BiodataText.ReadOnly = true;
+                    BiodataText.Multiline = true;
+                    BiodataText.Text = biodataText;
                 }
                 else
                 {
                     MessageBox.Show("Data Biodata Tidak Ditemukan yang tingkat kemiripan namanya di atas 60%");
-                
                 }
             }
             else
@@ -320,6 +334,7 @@ namespace Tubes3_ResmiTamatStima
     }
 }
 
+// Define the Biodata class to represent biodata records
 public class Biodata
 {
     public string NIK { get; set; }
