@@ -9,6 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using static System.Net.WebRequestMethods;
+using System.Transactions;
+using System.Security.Cryptography.Xml;
 
 namespace Tubes3_ResmiTamatStima
 {
@@ -18,7 +21,8 @@ namespace Tubes3_ResmiTamatStima
         private KMP kmp;
         private byte[] fingerprintData;
         private string inputData;
-        private List<string> data;
+        private List<string> data = new List<string>();
+        private List<string> files;
         private List<string> names_alay;
         private List<string> names_ori = new List<string>();
         private IConfiguration configuration;
@@ -32,7 +36,7 @@ namespace Tubes3_ResmiTamatStima
 
             this.configuration = configuration;
             boyerMoore = new BoyerMoore();
-            kmp = new KMP();
+            kmp = new KMP();    
 
             // Set custom font for labels if it was loaded successfully
             if (customFont != null)
@@ -72,7 +76,30 @@ namespace Tubes3_ResmiTamatStima
         private async void LoadDataFromDB()
         {
             await DBUtilities.InsertDummyDataAsync(configuration);
-            data = await DBUtilities.GetDataFromDB(configuration);
+            files = await DBUtilities.GetDataFromDB(configuration);
+            foreach (string file in files)
+            {
+                using Bitmap image = new Bitmap(file);
+
+                int portionWidth = Math.Min(image.Width, 30);
+                int portionHeight = Math.Min(image.Height, 30);
+
+                // Calculate the coordinates for the middle of the image
+                int x = (image.Width - portionWidth) / 2;
+                int y = (image.Height - portionHeight) / 2;
+
+                // Extract a portion from the middle of the image
+                using Bitmap portionF = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat);
+
+                // Convert the portion to binary data
+                byte[] binaryData = DBUtilities.ConvertImageToBinary(portionF);
+
+                // Convert binary data to Base64 string representation
+                string base64Data = Convert.ToBase64String(binaryData);
+
+                data.Add(base64Data);
+            }
+
             names_alay = await DBUtilities.GetNamesFromBiodata(configuration);
             foreach (string name in names_alay)
             {
@@ -213,7 +240,9 @@ namespace Tubes3_ResmiTamatStima
                     picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
                     picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
                 }
-                string name = await DBUtilities.GetNamesByCitraFromDB(configuration, bestMatch);
+                int idxData = data.IndexOf(bestMatch);
+                string file = files[idxData];
+                string name = await DBUtilities.GetNamesByCitraFromDB(configuration, file);
 
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
@@ -328,7 +357,7 @@ namespace Tubes3_ResmiTamatStima
 
         private void lblWaktuPencarian_Click_1(object sender, EventArgs e)
         {
-
+           
         }
 
         private void lblPersentaseKecocokan_Click(object sender, EventArgs e)

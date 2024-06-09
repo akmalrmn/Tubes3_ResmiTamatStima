@@ -59,27 +59,10 @@ namespace Tubes3_ResmiTamatStima.Data
                 foreach (string file in files)
                 {
                     idx++;
-                    using Bitmap image = new Bitmap(file);
-
-                    int portionWidth = Math.Min(image.Width, 30);
-                    int portionHeight = Math.Min(image.Height, 30);
-
-                    // Calculate the coordinates for the middle of the image
-                    int x = (image.Width - portionWidth) / 2;
-                    int y = (image.Height - portionHeight) / 2;
-
-                    // Extract a portion from the middle of the image
-                    using Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat);
-
-                    // Convert the portion to binary data
-                    byte[] binaryData = ConvertImageToBinary(portion);
-
-                    // Convert binary data to Base64 string representation
-                    string base64Data = Convert.ToBase64String(binaryData);
 
                     // Insert the converted data into the database
                     await connection.ExecuteAsync("INSERT INTO sidik_jari (berkas_citra, nama) VALUES (@imageData, @name)",
-                        new { imageData = base64Data, name = "Jokowi"}, transaction: transaction);
+                        new { imageData = file, name = "Jokowi"}, transaction: transaction);
                 }
 
                 // Commit the transaction if everything is successful
