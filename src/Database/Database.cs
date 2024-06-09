@@ -7,37 +7,6 @@ namespace Tubes3_ResmiTamatStima.Data
 {
     public static class DBUtilities
     {
-        // Initializes the database with BMP file paths from a test directory
-        public static async Task<bool> InitializeDBAsync(IConfiguration configuration)
-        {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            using var connection = new SqliteConnection(connectionString);
-            await connection.OpenAsync();
-
-            // Get the path to the test directory
-            string testPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../test"));
-            System.Diagnostics.Debug.WriteLine($"Looking for BMP files in: {testPath}");
-
-            // Get all BMP files from the test directory
-            string[] files = Directory.GetFiles(testPath, "*.bmp");
-
-            int idx = 0;
-            foreach (string file in files)
-            {
-                idx++;
-
-                // Get the relative path to the file
-                string relativePath = Path.GetRelativePath(testPath, file);
-
-                // Insert the relative path into the database
-                await connection.ExecuteAsync("INSERT INTO sidik_jari (berkas_citra, nama) VALUES (@imageData, @name)",
-                    new { imageData = "test/" + relativePath, name = "Jokowi" });
-                System.Diagnostics.Debug.WriteLine("test/" + relativePath);
-            }
-
-            return true;
-        }
-
         // Converts a Bitmap to a binary representation
         public static byte[] ConvertImageToBinary(Bitmap image)
         {

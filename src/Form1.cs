@@ -99,7 +99,6 @@ namespace Tubes3_ResmiTamatStima
                 names_ori.Add(AlayConverter.ConvertAlayToOriginal(name));
             }
 
-            await DBUtilities.UpdateNameInSidikJariAsync(configuration, "Jokowi2", "dewi");
         }
 
         private void btnPilihCitra_Click(object sender, EventArgs e)
@@ -238,7 +237,7 @@ namespace Tubes3_ResmiTamatStima
                     picBoxMatched.Image = System.Drawing.Image.FromFile(fileAkhir);
                 }
                 string name = await DBUtilities.GetNamesByCitraFromDB(configuration, file);
-
+                System.Diagnostics.Debug.WriteLine($"Nama: {name}");  
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
 
