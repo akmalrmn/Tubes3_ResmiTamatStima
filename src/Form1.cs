@@ -66,6 +66,7 @@ namespace Tubes3_ResmiTamatStima
 
         private async void LoadDataFromDB()
         {
+            await DBUtilities.InsertDummyDataAsync(configuration);
             files = await DBUtilities.GetDataFromDB(configuration);
             foreach (string file in files)
             {
@@ -96,6 +97,7 @@ namespace Tubes3_ResmiTamatStima
             names_alay = await DBUtilities.GetNamesFromBiodata(configuration);
             foreach (string name in names_alay)
             {
+                System.Diagnostics.Debug.WriteLine($"Name: {name}");
                 names_ori.Add(AlayConverter.ConvertAlayToOriginal(name));
             }
 
@@ -237,8 +239,9 @@ namespace Tubes3_ResmiTamatStima
                     picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
                     picBoxMatched.Image = System.Drawing.Image.FromFile(fileAkhir);
                 }
+                System.Diagnostics.Debug.WriteLine($"File: {file}");
                 string name = await DBUtilities.GetNamesByCitraFromDB(configuration, file);
-
+                System.Diagnostics.Debug.WriteLine($"Nama BESST: {name}");
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
 
@@ -308,7 +311,7 @@ namespace Tubes3_ResmiTamatStima
                 else
                 {
                     MessageBox.Show("Data Biodata Tidak Ditemukan yang tingkat kemiripan namanya di atas 60%");
-
+                    BiodataText.Text = "";
                 }
             }
             else
@@ -316,6 +319,8 @@ namespace Tubes3_ResmiTamatStima
                 System.Diagnostics.Debug.WriteLine($"Index: {bestMatchIndex}, Similarity: {bestSimilarity}");
                 lblPersentaseKecocokan.Text = "Persentase Kecocokan: -";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
+                picBoxMatched.Image = null;
+                BiodataText.Text = "";
                 MessageBox.Show("Tidak Ditemukan Sidik Jari yang Tingkat Kemiripannya diatas 60%");
             }
         }
