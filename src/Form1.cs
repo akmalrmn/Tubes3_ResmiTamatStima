@@ -66,7 +66,6 @@ namespace Tubes3_ResmiTamatStima
 
         private async void LoadDataFromDB()
         {
-            await DBUtilities.InsertDummyDataAsync(configuration);
             files = await DBUtilities.GetDataFromDB(configuration);
             foreach (string file in files)
             {
