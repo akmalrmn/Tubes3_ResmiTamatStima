@@ -49,7 +49,7 @@ namespace Tubes3_ResmiTamatStima.Data
                 await connection.ExecuteAsync(createSQL, transaction: transaction);
 
                 // Get the path to the bin directory
-                string binPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../Dataset"));
+                string binPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../test"));
                 System.Diagnostics.Debug.WriteLine($"Looking for BMP files in: {binPath}");
 
                 // Get all BMP files from the bin directory
