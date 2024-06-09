@@ -4,7 +4,7 @@
     <h3>Tugas Besar 3 IF2211 Strategi Algoritma</h3>
     <p>oleh kelompok ResmiTamatStima</p>
     
-![Example screenshot](./src/Images/logokelompok.png)
+![Example screenshot](./src/Images/logokelompok.jpg)
     <br/>
     <br/>
 </div>
