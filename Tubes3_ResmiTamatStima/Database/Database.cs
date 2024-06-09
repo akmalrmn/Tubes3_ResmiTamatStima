@@ -61,18 +61,15 @@ namespace Tubes3_ResmiTamatStima.Data
                     idx++;
                     using Bitmap image = new Bitmap(file);
 
-                    // Ensure the image is large enough for the specified portion
-                    if (image.Width < 30 || image.Height < 30)
-                    {
-                        throw new ArgumentException("Image is too small for the specified portion size.");
-                    }
+                    int portionWidth = Math.Min(image.Width, 30);
+                    int portionHeight = Math.Min(image.Height, 30);
 
                     // Calculate the coordinates for the middle of the image
-                    int x = (image.Width - 30) / 2;
-                    int y = (image.Height - 30) / 2;
+                    int x = (image.Width - portionWidth) / 2;
+                    int y = (image.Height - portionHeight) / 2;
 
-                    // Extract a 30x30 portion from the middle of the image
-                    using Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat);
+                    // Extract a portion from the middle of the image
+                    using Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat);
 
                     // Convert the portion to binary data
                     byte[] binaryData = ConvertImageToBinary(portion);

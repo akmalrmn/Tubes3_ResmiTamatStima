@@ -100,19 +100,15 @@ namespace Tubes3_ResmiTamatStima
                         {
                             using (Bitmap image = new Bitmap(ofd.FileName))
                             {
-                                // Ensure the image is large enough for the specified portion
-                                if (image.Width < 30 || image.Height < 30)
-                                {
-                                    MessageBox.Show("Image is too small for the specified portion size.");
-                                    return;
-                                }
+                                int portionWidth = Math.Min(image.Width, 30);
+                                int portionHeight = Math.Min(image.Height, 30);
 
                                 // Calculate the coordinates for the middle of the image
-                                int x = (image.Width - 30) / 2;
-                                int y = (image.Height - 30) / 2;
+                                int x = (image.Width - portionWidth) / 2;
+                                int y = (image.Height - portionHeight) / 2;
 
-                                // Extract a 30x30 portion from the middle of the image
-                                using (Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat))
+                                // Extract a portion from the middle of the image
+                                using (Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat))
                                 {
                                     picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
                                     picBoxInput.Image = (System.Drawing.Image)portion.Clone();
