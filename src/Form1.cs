@@ -3,15 +3,6 @@ using System.Diagnostics;
 using Tubes3_ResmiTamatStima.Algorithms;
 using Tubes3_ResmiTamatStima.Data;
 using System.Drawing.Text;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using static System.Net.WebRequestMethods;
-using System.Transactions;
-using System.Security.Cryptography.Xml;
 
 namespace Tubes3_ResmiTamatStima
 {
@@ -75,11 +66,13 @@ namespace Tubes3_ResmiTamatStima
 
         private async void LoadDataFromDB()
         {
-            await DBUtilities.InsertDummyDataAsync(configuration);
             files = await DBUtilities.GetDataFromDB(configuration);
             foreach (string file in files)
             {
-                using Bitmap image = new Bitmap(file);
+                string fileAwal = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../"));
+                string fileAkhir = Path.GetFullPath(Path.Combine(fileAwal, file));
+                System.Diagnostics.Debug.WriteLine($"File: {fileAkhir}");
+                using Bitmap image = new Bitmap(fileAkhir);
 
                 int portionWidth = Math.Min(image.Width, 30);
                 int portionHeight = Math.Min(image.Height, 30);
@@ -323,46 +316,6 @@ namespace Tubes3_ResmiTamatStima
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
                 MessageBox.Show("Tidak Ditemukan Sidik Jari yang Tingkat Kemiripannya diatas 60%");
             }
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void JudulProgram_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblWaktuPencarian_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void picBoxInput_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioBM_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblWaktuPencarian_Click_1(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void lblPersentaseKecocokan_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

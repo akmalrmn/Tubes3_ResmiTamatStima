@@ -1,9 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using System.IO;
 using Tubes3_ResmiTamatStima.Data;
-using Tubes3_ResmiTamatStima.Algorithms;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace Tubes3_ResmiTamatStima
 {
@@ -20,7 +16,6 @@ namespace Tubes3_ResmiTamatStima
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
-
 
             Task.Run(async () => await DBUtilities.InitializeDBAsync(configuration)).Wait();
             InitializeAndRun(configuration);

@@ -97,7 +97,6 @@
             radioBM.TabStop = true;
             radioBM.Text = "BM";
             radioBM.UseVisualStyleBackColor = true;
-            radioBM.CheckedChanged += radioBM_CheckedChanged;
             // 
             // groupBox1
             // 
@@ -152,7 +151,6 @@
             lblWaktuPencarian.Size = new Size(211, 22);
             lblWaktuPencarian.TabIndex = 10;
             lblWaktuPencarian.Text = "Waktu Pencarian: ";
-            lblWaktuPencarian.Click += lblWaktuPencarian_Click_1;
             // 
             // lblPersentaseKecocokan
             // 
@@ -164,7 +162,6 @@
             lblPersentaseKecocokan.Size = new Size(265, 22);
             lblPersentaseKecocokan.TabIndex = 12;
             lblPersentaseKecocokan.Text = "Persentase Kecocokan:";
-            lblPersentaseKecocokan.Click += lblPersentaseKecocokan_Click;
             // 
             // BiodataText
             // 
