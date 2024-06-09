@@ -264,19 +264,21 @@ namespace Tubes3_ResmiTamatStima
                 Biodata biodata = await DBUtilities.GetBiodataByNameFromDB(configuration, alay);
 
                 // Create and display labels for biodata
-                var biodataText = $@"
-                NIK: {biodata.NIK}
-                Nama: {name}
-                Tempat Lahir: {biodata.tempat_lahir}
-                Tanggal Lahir: {biodata.tanggal_lahir}
-                Jenis Kelamin: {biodata.jenis_kelamin}
-                Golongan Darah: {biodata.golongan_darah}
-                Alamat: {biodata.alamat}
-                Agama: {biodata.agama}
-                Status Perkawinan: {biodata.status_perkawinan}
-                Pekerjaan: {biodata.pekerjaan}
-                Kewarganegaraan: {biodata.kewarganegaraan}";
+                var biodataText = $"NIK: {biodata.NIK}\r\n\r\n" +
+                  $"Nama: {name}\r\n\r\n" +
+                  $"Tempat Lahir: {biodata.tempat_lahir}\r\n\r\n" +
+                  $"Tanggal Lahir: {biodata.tanggal_lahir}\r\n\r\n" +
+                  $"Jenis Kelamin: {biodata.jenis_kelamin}\r\n\r\n" +
+                  $"Golongan Darah: {biodata.golongan_darah}\r\n\r\n" +
+                  $"Alamat: {biodata.alamat}\r\n\r\n" +
+                  $"Agama: {biodata.agama}\r\n\r\n" +
+                  $"Status Perkawinan: {biodata.status_perkawinan}\r\n\r\n" +
+                  $"Pekerjaan: {biodata.pekerjaan}\r\n\r\n" +
+                  $"Kewarganegaraan: {biodata.kewarganegaraan}\r\n\r\n";
 
+                BiodataText.TextAlign = HorizontalAlignment.Left;
+                BiodataText.ReadOnly = true;
+                BiodataText.Multiline = true;
                 BiodataText.Text = biodataText;
                 }
                 else
