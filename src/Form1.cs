@@ -43,7 +43,6 @@ namespace Tubes3_ResmiTamatStima
             }
         }
 
-        // Load custom font from file
         private void LoadCustomFont()
         {
             try
@@ -55,20 +54,18 @@ namespace Tubes3_ResmiTamatStima
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading custom font: {ex.Message}");
-                customFont = this.Font; // Fall back to default font if loading fails
+                customFont = this.Font; // Fall back to default font
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Load data from database when form loads
+            // Memuat data dari database ketika form di-load
             LoadDataFromDB();
         }
 
-        // Load data from database asynchronously
         private async void LoadDataFromDB()
         {
-            // Get image file paths from database
             files = await DBUtilities.GetDataFromDB(configuration);
             foreach (string file in files)
             {
@@ -77,8 +74,8 @@ namespace Tubes3_ResmiTamatStima
                 System.Diagnostics.Debug.WriteLine($"File: {fileAkhir}");
                 using Bitmap image = new Bitmap(fileAkhir);
 
-                int portionWidth = Math.Min(image.Width, 30);
-                int portionHeight = Math.Min(image.Height, 30);
+                int portionWidth = Math.Min(image.Width, 8);
+                int portionHeight = Math.Min(image.Height, 8);
 
                 // Calculate the coordinates for the middle of the image
                 int x = (image.Width - portionWidth) / 2;
@@ -93,23 +90,18 @@ namespace Tubes3_ResmiTamatStima
                 // Convert binary data to Base64 string representation
                 string base64Data = Convert.ToBase64String(binaryData);
 
-                // Add base64 string to data list
                 data.Add(base64Data);
             }
 
-            // Get alay names from database
             names_alay = await DBUtilities.GetNamesFromBiodata(configuration);
             foreach (string name in names_alay)
             {
-                // Convert alay names to original names
                 names_ori.Add(AlayConverter.ConvertAlayToOriginal(name));
             }
 
-            // Update specific entry in sidik_jari table
             await DBUtilities.UpdateNameInSidikJariAsync(configuration, "Jokowi2", "dewi");
         }
 
-        // Handle the click event for the "Pilih Citra" button
         private void btnPilihCitra_Click(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
@@ -128,8 +120,8 @@ namespace Tubes3_ResmiTamatStima
                         {
                             using (Bitmap image = new Bitmap(ofd.FileName))
                             {
-                                int portionWidth = Math.Min(image.Width, 30);
-                                int portionHeight = Math.Min(image.Height, 30);
+                                int portionWidth = Math.Min(image.Width, 8);
+                                int portionHeight = Math.Min(image.Height, 8);
 
                                 // Calculate the coordinates for the middle of the image
                                 int x = (image.Width - portionWidth) / 2;
@@ -138,10 +130,8 @@ namespace Tubes3_ResmiTamatStima
                                 // Extract a portion from the middle of the image
                                 using (Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat))
                                 {
-                                    // Display the portion in the PictureBox
-                                    picBoxInput.SizeMode = PictureBoxSizeMode.Zoom;
-                                    picBoxInput.Image = (System.Drawing.Image)portion.Clone();
-                                    // Convert the portion to binary data and base64 string
+                                    picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
+                                    picBoxInput.Image = (System.Drawing.Image.FromFile(ofd.FileName));
                                     fingerprintData = DBUtilities.ConvertImageToBinary(portion);
                                     inputData = Convert.ToBase64String(fingerprintData);
                                 }
@@ -156,7 +146,6 @@ namespace Tubes3_ResmiTamatStima
             }
         }
 
-        // Handle the click event for the "Search" button
         private async void button2_Click(object sender, EventArgs e)
         {
             if (picBoxInput.Image == null)
@@ -171,11 +160,9 @@ namespace Tubes3_ResmiTamatStima
                 return;
             }
 
-            // Perform fingerprint search asynchronously
             await SearchFingerprint();
         }
 
-        // Perform fingerprint search and display the results
         private async Task SearchFingerprint()
         {
             if (fingerprintData == null)
@@ -198,7 +185,6 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Start();
             System.Diagnostics.Debug.WriteLine($"Number of data to search: {data.Count}");
 
-            // Parallel search in data list using the selected algorithm
             var tasks = data.Select((d, i) => Task.Run(() =>
             {
                 List<int> occurrences;
@@ -228,7 +214,6 @@ namespace Tubes3_ResmiTamatStima
 
             var results = await Task.WhenAll(tasks);
 
-            // Find the best match
             var bestResult = results.OrderByDescending(r => r.Similarity).First();
             bestSimilarity = bestResult.Similarity;
             bestMatch = bestResult.Data;
@@ -237,26 +222,26 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
 
-            // Display the best match result if similarity is above 60%
             if (bestMatch != null && bestSimilarity * 100 > 60)
             {
                 System.Diagnostics.Debug.WriteLine($"Index: {bestMatchIndex}, Similarity: {bestSimilarity}");
                 lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
                 byte[] imageBytes = Convert.FromBase64String(bestMatch);
+                int idxData = data.IndexOf(bestMatch);
+                string file = files[idxData];
+                string fileAwal = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../"));
+                string fileAkhir = Path.GetFullPath(Path.Combine(fileAwal, file));
                 using (MemoryStream ms = new MemoryStream(imageBytes))
                 {
                     picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
-                    picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
+                    picBoxMatched.Image = System.Drawing.Image.FromFile(fileAkhir);
                 }
-                int idxData = data.IndexOf(bestMatch);
-                string file = files[idxData];
                 string name = await DBUtilities.GetNamesByCitraFromDB(configuration, file);
 
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
 
-                // Search for the best name match
                 foreach (string nama in names_ori)
                 {
                     List<int> occurrences_name;
@@ -267,6 +252,7 @@ namespace Tubes3_ResmiTamatStima
                     else
                     {
                         occurrences_name = boyerMoore.Search(nama, name);
+
                     }
                     double similarity_name;
                     if (occurrences_name.Count > 0)
@@ -274,7 +260,9 @@ namespace Tubes3_ResmiTamatStima
                         bestSimilarity_name = 1.0;
                         bestMatch_name = nama;
                         System.Diagnostics.Debug.WriteLine($"Nama: {nama}, Similarity: 1");
+
                         break;
+
                     }
                     else
                     {
@@ -294,7 +282,6 @@ namespace Tubes3_ResmiTamatStima
                 int idx = names_ori.IndexOf(bestMatch_name);
                 System.Diagnostics.Debug.WriteLine($"Index Nama: {idx}, Similarity: {bestSimilarity_name}");
 
-                // Display the biodata if name similarity is above 60%
                 if (idx != -1 && bestSimilarity_name * 100 > 60)
                 {
                     string alay = names_alay[idx];
@@ -321,6 +308,7 @@ namespace Tubes3_ResmiTamatStima
                 else
                 {
                     MessageBox.Show("Data Biodata Tidak Ditemukan yang tingkat kemiripan namanya di atas 60%");
+
                 }
             }
             else
@@ -334,7 +322,6 @@ namespace Tubes3_ResmiTamatStima
     }
 }
 
-// Define the Biodata class to represent biodata records
 public class Biodata
 {
     public string NIK { get; set; }
