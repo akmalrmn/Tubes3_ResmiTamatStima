@@ -112,5 +112,57 @@ namespace Tubes3_ResmiTamatStima.Data
                 await connection.CloseAsync();
             }
         }
+
+        // Insert dummy data into the biodata table
+        public static async Task InsertDummyDataAsync(IConfiguration configuration) 
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            using var connection = new SqliteConnection(connectionString);
+            await connection.OpenAsync();
+
+            var insertSQL = @"
+    INSERT INTO `biodata` (`NIK`, `nama`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `golongan_darah`, `alamat`, `agama`, `status_perkawinan`, `pekerjaan`, `kewarganegaraan`) VALUES
+    ('1234567890123456', 'j0k0w1', 'Surabaya', '1990-01-01', 'Laki-laki', 'A', 'Jl. Mawar No. 1', 'Islam', 'Belum Menikah', 'Programmer', 'Indonesia'),
+    ('2345678901234567', 'd3w1', 'Jakarta', '1992-02-02', 'Perempuan', 'B', 'Jl. Melati No. 2', 'Kristen', 'Belum Menikah', 'Desainer', 'Indonesia'),
+    ('3456789012345678', '4n4', 'Bandung', '1994-03-03', 'Perempuan', 'O', 'Jl. Anggrek No. 3', 'Hindu', 'Belum Menikah', 'Dokter', 'Indonesia'),
+    ('4567890123456789', 'b4mb4ng', 'Medan', '1988-04-04', 'Laki-laki', 'AB', 'Jl. Kenanga No. 4', 'Budha', 'Belum Menikah', 'Guru', 'Indonesia'),
+    ('5678901234567890', 'r4h4y5', 'Yogyakarta', '1985-05-05', 'Perempuan', 'A', 'Jl. Tulip No. 5', 'Katolik', 'Belum Menikah', 'Wiraswasta', 'Indonesia'),
+    ('6789012345678901', 'yud17', 'Semarang', '1987-06-06', 'Laki-laki', 'B', 'Jl. Flamboyan No. 6', 'Islam', 'Belum Menikah', 'Pengacara', 'Indonesia'),
+    ('7890123456789012', 'p3t3r', 'Palembang', '1991-07-07', 'Laki-laki', 'O', 'Jl. Mawar No. 7', 'Kristen', 'Belum Menikah', 'Dokter Gigi', 'Indonesia'),
+    ('8901234567890123', 'd3s7', 'Makassar', '1993-08-08', 'Perempuan', 'AB', 'Jl. Melati No. 8', 'Hindu', 'Belum Menikah', 'Arsitek', 'Indonesia'),
+    ('9012345678901234', 'b3n7', 'Bali', '1995-09-09', 'Laki-laki', 'A', 'Jl. Anggrek No. 9', 'Budha', 'Belum Menikah', 'Pilot', 'Indonesia'),
+    ('0123456789012345', 'g4l4ng', 'Bogor', '1986-10-10', 'Laki-laki', 'B', 'Jl. Kenanga No. 10', 'Katolik', 'Belum Menikah', 'Penyanyi', 'Indonesia'),
+    ('1234509876543210', 'k3k3', 'Malang', '1989-11-11', 'Perempuan', 'O', 'Jl. Tulip No. 11', 'Islam', 'Belum Menikah', 'Penulis', 'Indonesia'),
+    ('2345609876543210', 'c4ndy', 'Balikpapan', '1990-12-12', 'Perempuan', 'AB', 'Jl. Flamboyan No. 12', 'Kristen', 'Belum Menikah', 'Model', 'Indonesia'),
+    ('3456709876543210', 'p4ndu', 'Manado', '1993-01-13', 'Laki-laki', 'A', 'Jl. Mawar No. 13', 'Hindu', 'Duda', 'Belum Menikah', 'Indonesia'),
+    ('4567809876543210', 'b0y', 'Samarinda', '1992-02-14', 'Laki-laki', 'B', 'Jl. Melati No. 14', 'Budha', 'Belum Menikah', 'Atlet', 'Indonesia'),
+    ('5678909876543210', 'd4n1', 'Denpasar', '1988-03-15', 'Laki-laki', 'O', 'Jl. Anggrek No. 15', 'Katolik', 'Belum Menikah', 'Polisi', 'Indonesia'),
+    ('6789009876543210', '4d1t', 'Solo', '1987-04-16', 'Laki-laki', 'AB', 'Jl. Kenanga No. 16', 'Islam', 'Belum Menikah', 'Tentara', 'Indonesia');
+    ";
+
+            using var transaction = await connection.BeginTransactionAsync();
+
+            try
+            {
+                // Execute the insertions
+                await connection.ExecuteAsync(insertSQL, transaction: transaction);
+
+                // Commit the transaction if everything is successful
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+
+                // Rollback the transaction if an error occurs
+                await transaction.RollbackAsync();
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+        }
+
     }
 }
