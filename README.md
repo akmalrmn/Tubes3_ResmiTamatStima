@@ -40,7 +40,7 @@ Regex yang diimplementasikan dalam program ini melakukan handle untuk angka dan 
 5. ubah semua angka menjadi huruf
 
 ## Kebutuhan Program 🔨
-Visual Studio IDE
+Visual Studio IDE 2022
 
 ## Cara Menjalankan 🏃🏾‍♂️
 
