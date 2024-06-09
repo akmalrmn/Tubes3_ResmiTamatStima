@@ -74,8 +74,8 @@ namespace Tubes3_ResmiTamatStima
                 System.Diagnostics.Debug.WriteLine($"File: {fileAkhir}");
                 using Bitmap image = new Bitmap(fileAkhir);
 
-                int portionWidth = Math.Min(image.Width, 30);
-                int portionHeight = Math.Min(image.Height, 30);
+                int portionWidth = Math.Min(image.Width, 8);
+                int portionHeight = Math.Min(image.Height, 8);
 
                 // Calculate the coordinates for the middle of the image
                 int x = (image.Width - portionWidth) / 2;
@@ -120,8 +120,8 @@ namespace Tubes3_ResmiTamatStima
                         {
                             using (Bitmap image = new Bitmap(ofd.FileName))
                             {
-                                int portionWidth = Math.Min(image.Width, 30);
-                                int portionHeight = Math.Min(image.Height, 30);
+                                int portionWidth = Math.Min(image.Width, 8);
+                                int portionHeight = Math.Min(image.Height, 8);
 
                                 // Calculate the coordinates for the middle of the image
                                 int x = (image.Width - portionWidth) / 2;
@@ -131,7 +131,7 @@ namespace Tubes3_ResmiTamatStima
                                 using (Bitmap portion = image.Clone(new Rectangle(x, y, portionWidth, portionHeight), image.PixelFormat))
                                 {
                                     picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
-                                    picBoxInput.Image = (System.Drawing.Image)portion.Clone();
+                                    picBoxInput.Image = (System.Drawing.Image.FromFile(ofd.FileName));
                                     fingerprintData = DBUtilities.ConvertImageToBinary(portion);
                                     inputData = Convert.ToBase64String(fingerprintData);
                                 }
@@ -228,13 +228,15 @@ namespace Tubes3_ResmiTamatStima
                 lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
                 byte[] imageBytes = Convert.FromBase64String(bestMatch);
+                int idxData = data.IndexOf(bestMatch);
+                string file = files[idxData];
+                string fileAwal = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../../"));
+                string fileAkhir = Path.GetFullPath(Path.Combine(fileAwal, file));
                 using (MemoryStream ms = new MemoryStream(imageBytes))
                 {
                     picBoxMatched.SizeMode = PictureBoxSizeMode.Zoom;
-                    picBoxMatched.Image = System.Drawing.Image.FromStream(ms);
+                    picBoxMatched.Image = System.Drawing.Image.FromFile(fileAkhir);
                 }
-                int idxData = data.IndexOf(bestMatch);
-                string file = files[idxData];
                 string name = await DBUtilities.GetNamesByCitraFromDB(configuration, file);
 
                 double bestSimilarity_name = 0;
