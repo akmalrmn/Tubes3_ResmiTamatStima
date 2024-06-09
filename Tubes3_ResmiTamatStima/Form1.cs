@@ -4,7 +4,6 @@ using Tubes3_ResmiTamatStima.Algorithms;
 using Tubes3_ResmiTamatStima.Data;
 using System.Drawing.Text;
 using System.Drawing;
-using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
@@ -24,36 +23,50 @@ namespace Tubes3_ResmiTamatStima
         private List<string> names_ori = new List<string>();
         private IConfiguration configuration;
         private Font customFont;
+        private PrivateFontCollection pfc;
 
         public Form1(IConfiguration configuration)
         {
             InitializeComponent();
-
-            // Load Custom Font
-            PrivateFontCollection pfc = new PrivateFontCollection();
-            pfc.AddFontFile("font.otf");
-            customFont = new Font(pfc.Families[0], 11, FontStyle.Bold);
+            LoadCustomFont();
 
             this.configuration = configuration;
             boyerMoore = new BoyerMoore();
             kmp = new KMP();
 
-            // Set custom font for labels
-            btnPilihCitra.Font = customFont;
-            radioBM.Font = customFont;
-            radioKMP.Font = customFont;
-            groupBox1.Font = customFont;
-            btnSearch.Font = customFont;
-            lblPersentaseKecocokan.Font = customFont;
-            lblWaktuPencarian.Font = customFont;
-            BiodataText.Font = customFont;
+            // Set custom font for labels if it was loaded successfully
+            if (customFont != null)
+            {
+                btnPilihCitra.Font = customFont;
+                radioBM.Font = customFont;
+                radioKMP.Font = customFont;
+                groupBox1.Font = customFont;
+                btnSearch.Font = customFont;
+                lblPersentaseKecocokan.Font = customFont;
+                lblWaktuPencarian.Font = customFont;
+                BiodataText.Font = customFont;
+            }
+        }
+
+        private void LoadCustomFont()
+        {
+            try
+            {
+                pfc = new PrivateFontCollection();
+                pfc.AddFontFile("font.otf");
+                customFont = new Font(pfc.Families[0], 11, FontStyle.Bold);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading custom font: {ex.Message}");
+                customFont = this.Font; // Fall back to default font
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             // Memuat data dari database ketika form di-load
             LoadDataFromDB();
-
         }
 
         private async void LoadDataFromDB()
@@ -77,31 +90,42 @@ namespace Tubes3_ResmiTamatStima
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Ambil Gambar");
-                using (OpenFileDialog ofd = new OpenFileDialog())
+                try
                 {
-                    ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
-                    if (ofd.ShowDialog() == DialogResult.OK)
+                    System.Diagnostics.Debug.WriteLine("Ambil Gambar");
+                    using (OpenFileDialog ofd = new OpenFileDialog())
                     {
-                        using Bitmap image = new Bitmap(ofd.FileName);
-                        // Ensure the image is large enough for the specified portion
-                        if (image.Width < 30 || image.Height < 30)
+                        ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+                        if (ofd.ShowDialog() == DialogResult.OK)
                         {
-                            MessageBox.Show("Image is too small for the specified portion size.");
-                            return;
+                            using (Bitmap image = new Bitmap(ofd.FileName))
+                            {
+                                // Ensure the image is large enough for the specified portion
+                                if (image.Width < 30 || image.Height < 30)
+                                {
+                                    MessageBox.Show("Image is too small for the specified portion size.");
+                                    return;
+                                }
+
+                                // Calculate the coordinates for the middle of the image
+                                int x = (image.Width - 30) / 2;
+                                int y = (image.Height - 30) / 2;
+
+                                // Extract a 30x30 portion from the middle of the image
+                                using (Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat))
+                                {
+                                    picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
+                                    picBoxInput.Image = (System.Drawing.Image)portion.Clone();
+                                    fingerprintData = DBUtilities.ConvertImageToBinary(portion);
+                                    inputData = Convert.ToBase64String(fingerprintData);
+                                }
+                            }
                         }
-
-                        // Calculate the coordinates for the middle of the image
-                        int x = (image.Width - 30) / 2;
-                        int y = (image.Height - 30) / 2;
-
-                        // Extract a 30x30 portion from the middle of the image
-                        using Bitmap portion = image.Clone(new Rectangle(x, y, 30, 30), image.PixelFormat);
-                        picBoxInput.SizeMode = PictureBoxSizeMode.Zoom; // Ensure the PictureBox displays the image properly
-                        picBoxInput.Image = (System.Drawing.Image)portion.Clone();
-                        fingerprintData = DBUtilities.ConvertImageToBinary(portion);
-                        inputData = Convert.ToBase64String(fingerprintData);
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error selecting image: {ex.Message}");
                 }
             }
         }
@@ -168,7 +192,7 @@ namespace Tubes3_ResmiTamatStima
                     int maxLength = Math.Max(d.Length, inputData.Length);
                     similarity = (maxLength - distance) / (double)maxLength;
                 }
-
+                System.Diagnostics.Debug.WriteLine($"Index: {i}, Similarity: {similarity}");
                 return new { Index = i, Similarity = similarity, Data = d };
             })).ToArray();
 
@@ -182,8 +206,9 @@ namespace Tubes3_ResmiTamatStima
             stopwatch.Stop();
             long waktuEks = stopwatch.ElapsedMilliseconds;
 
-            if (bestMatch != null && bestSimilarity * 100 > 70)
+            if (bestMatch != null && bestSimilarity * 100 > 60)
             {
+                System.Diagnostics.Debug.WriteLine($"Index: {bestMatchIndex}, Similarity: {bestSimilarity}");
                 lblPersentaseKecocokan.Text = $"Persentase Kecocokan: {bestSimilarity * 100}%";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
                 byte[] imageBytes = Convert.FromBase64String(bestMatch);
@@ -194,18 +219,30 @@ namespace Tubes3_ResmiTamatStima
                 }
                 string name = await DBUtilities.GetNamesByCitraFromDB(configuration, bestMatch);
 
-
                 double bestSimilarity_name = 0;
                 string bestMatch_name = null;
 
                 foreach (string nama in names_ori)
                 {
                     List<int> occurrences_name;
-                    occurrences_name = boyerMoore.Search(nama, name);
+                    if (nama.Length > name.Length)
+                    {
+                    occurrences_name = boyerMoore.Search(name, nama);
+                    }
+                    else
+                    {
+                        occurrences_name = boyerMoore.Search(nama, name);
+
+                    }
                     double similarity_name;
                     if (occurrences_name.Count > 0)
                     {
-                        similarity_name = 1.0;
+                        bestSimilarity_name = 1.0;
+                        bestMatch_name = nama;
+                        System.Diagnostics.Debug.WriteLine($"Nama: {nama}, Similarity: 1");
+
+                        break;
+
                     }
                     else
                     {
@@ -219,9 +256,14 @@ namespace Tubes3_ResmiTamatStima
                         bestSimilarity_name = similarity_name;
                         bestMatch_name = nama;
                     }
+                    System.Diagnostics.Debug.WriteLine($"Nama: {nama}, Similarity: {similarity_name}");
                 }
 
                 int idx = names_ori.IndexOf(bestMatch_name);
+                System.Diagnostics.Debug.WriteLine($"Index Nama: {idx}, Similarity: {bestSimilarity_name}");
+
+                if (idx != -1 && bestSimilarity_name * 100 > 60)
+                {
                 string alay = names_alay[idx];
                 Biodata biodata = await DBUtilities.GetBiodataByNameFromDB(configuration, alay);
 
@@ -240,12 +282,19 @@ namespace Tubes3_ResmiTamatStima
                 Kewarganegaraan: {biodata.kewarganegaraan}";
 
                 BiodataText.Text = biodataText;
+                }
+                else
+                {
+                    MessageBox.Show("Data Biodata Tidak Ditemukan yang tingkat kemiripan namanya di atas 60%");
+                
+                }
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine($"Index: {bestMatchIndex}, Similarity: {bestSimilarity}");
                 lblPersentaseKecocokan.Text = "Persentase Kecocokan: -";
                 lblWaktuPencarian.Text = $"Waktu Pencarian: {waktuEks} ms";
-                MessageBox.Show("Tidak Ditemukan Sidik Jari yang Tingkat Kemiripannya diatas 70%");
+                MessageBox.Show("Tidak Ditemukan Sidik Jari yang Tingkat Kemiripannya diatas 60%");
             }
         }
 
@@ -291,7 +340,7 @@ namespace Tubes3_ResmiTamatStima
     }
 }
 
-public class Biodata 
+public class Biodata
 {
     public string NIK { get; set; }
     public string nama { get; set; }
